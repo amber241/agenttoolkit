@@ -20,6 +20,11 @@
     --tag-ondemand-ink: #9a5a4e;
     --tag-trigger-bg: #e5ede0;
     --tag-trigger-ink: #5a7548;
+
+    --status-building-bg: #f7e9d8;
+    --status-building-ink: #a26a2a;
+    --status-planned-bg: #ece7df;
+    --status-planned-ink: #8a7a68;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -391,6 +396,38 @@ html, body {
     font-size: 11px;
     color: var(--ink-muted);
     font-style: italic;
+}
+
+/* Lifecycle status — on AI cards that aren't Live yet */
+.status-badge {
+    font-size: 10px;
+    font-weight: 500;
+    padding: 3px 8px;
+    border-radius: 100px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.status-badge.status-building {
+    background: var(--status-building-bg);
+    color: var(--status-building-ink);
+}
+
+.status-badge.status-planned {
+    background: var(--status-planned-bg);
+    color: var(--status-planned-ink);
+}
+
+/* Mute non-live cards so the eye lands on what's already running */
+.ai-card.status-building {
+    border-style: dashed;
+}
+
+.ai-card.status-planned {
+    opacity: 0.72;
+    border-style: dashed;
 }
 
 /* Zoom controls */

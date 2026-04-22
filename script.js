@@ -12,6 +12,18 @@ const TAG_LABELS = {
     TRIGGER: 'Trigger',
 };
 
+const STATUS_CLASSES = {
+    LIVE: 'live',
+    BUILDING: 'building',
+    PLANNED: 'planned',
+};
+
+const STATUS_LABELS = {
+    LIVE: 'Live',
+    BUILDING: 'Building',
+    PLANNED: 'Planned',
+};
+
 let orgData = null;
 
 async function loadData() {
@@ -131,16 +143,24 @@ function buildPersonColumn(person) {
 
 function buildAiCard(emp) {
     const card = document.createElement('div');
-    card.className = 'ai-card';
+    const status = emp.status || 'LIVE';
+    const statusClass = STATUS_CLASSES[status] || 'live';
+    card.className = `ai-card status-${statusClass}`;
 
     const tagClass = TAG_CLASSES[emp.tag] || 'scheduled';
     const tagLabel = TAG_LABELS[emp.tag] || emp.tag;
+    const statusLabel = STATUS_LABELS[status] || status;
+
+    const statusBadgeHtml = status === 'LIVE'
+        ? ''
+        : `<span class="status-badge status-${statusClass}">${statusLabel}</span>`;
 
     card.innerHTML = `
         <div class="ai-card-header">
             <div>
                 <div class="ai-card-title">${emp.name}</div>
             </div>
+            ${statusBadgeHtml}
         </div>
         <div class="ai-card-role">${emp.role}</div>
         <div class="ai-card-description">${emp.description}</div>
