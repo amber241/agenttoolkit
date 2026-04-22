@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Agent Toolkit · AI-Powered Company</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="brand">The Agent Toolkit</div>
+        <nav class="site-nav">
+            <a href="#" class="active">Org Map</a>
+            <a href="#">Archive</a>
+        </nav>
+    </header>
+
+    <main class="chart-container">
+        <section class="hero">
+            <h1 class="headline">The Agent Toolkit</h1>
+            <p class="subtitle" id="subtitle"></p>
+        </section>
+
+        <section class="org-tree" id="orgTree">
+            <!-- JS renders here -->
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>Built from the inside of luxury real estate.</p>
+    </footer>
+
+    <div class="zoom-controls">
+        <button class="zoom-btn" id="zoomIn" aria-label="Zoom in" title="Zoom in">+</button>
+        <div class="zoom-level" id="zoomLevel">100%</div>
+        <button class="zoom-btn" id="zoomOut" aria-label="Zoom out" title="Zoom out">−</button>
+        <button class="zoom-btn zoom-reset" id="zoomReset" aria-label="Reset zoom" title="Reset zoom">⟲</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
