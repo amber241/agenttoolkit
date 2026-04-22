@@ -1,0 +1,87 @@
+{
+  "company": {
+    "name": "The Agent Toolkit",
+    "tagline": "We don't hire people to do process work. We train humans to become AI Architects, then they build AI Employees that handle the rest.",
+    "subtitle": "Click any card to explore the org. Click AI Employees to see who's really doing the work."
+  },
+  "people": [
+    {
+      "id": "amber",
+      "name": "Amber Bush-Joseph",
+      "title": "CEO",
+      "initial": "A",
+      "tier": 1,
+      "reportsTo": null,
+      "aiEmployees": [
+        "daily-competitor-brief-writer",
+        "weekly-competitor-brief-writer",
+        "reel-script-copywriter",
+        "carousel-post-copywriter"
+      ]
+    },
+    {
+      "id": "sam",
+      "name": "Sam",
+      "title": "COO",
+      "initial": "S",
+      "tier": 1,
+      "reportsTo": null,
+      "aiEmployees": []
+    },
+    {
+      "id": "tristan",
+      "name": "Tristan",
+      "title": "Marketing Director",
+      "initial": "T",
+      "tier": 2,
+      "reportsTo": "amber",
+      "aiEmployees": ["social-media-data-analyst"]
+    },
+    {
+      "id": "hannah",
+      "name": "Hannah",
+      "title": "Operations Director",
+      "initial": "H",
+      "tier": 2,
+      "reportsTo": "sam",
+      "aiEmployees": []
+    }
+  ],
+  "aiEmployees": {
+    "social-media-data-analyst": {
+      "name": "Social Media Data Analyst",
+      "role": "IG Analyzer",
+      "description": "Scrapes competitor and inspiration posts nightly. Transcribes audio with Whisper. OCRs on-screen text. Writes structured per-post reports.",
+      "tag": "SCHEDULED",
+      "schedule": "Daily 6:00 AM"
+    },
+    "daily-competitor-brief-writer": {
+      "name": "Daily Competitor Brief Writer",
+      "role": "Daily Competitive Intelligence",
+      "description": "Reads yesterday's raw reports. Synthesizes a tactical daily brief with hooks, frameworks, CTAs, and actionable takeaways in the Framework Library format.",
+      "tag": "SCHEDULED",
+      "schedule": "Daily 7:00 AM"
+    },
+    "weekly-competitor-brief-writer": {
+      "name": "Weekly Competitor Brief Writer",
+      "role": "Weekly Strategic Intelligence",
+      "description": "Zooms out across seven days of briefs and reports. Produces a weekly content plan with hooks, frameworks, and CTAs pre-assigned to each proposed post.",
+      "tag": "SCHEDULED",
+      "schedule": "Mondays 8:00 AM"
+    },
+    "reel-script-copywriter": {
+      "name": "Reel Script Copywriter",
+      "role": "Reel Script Generation",
+      "description": "Consumes the Framework Library plus voice guide plus weekly plan. Generates reel scripts with beat-by-beat structure in Amber's voice.",
+      "tag": "ON_DEMAND",
+      "schedule": "On demand"
+    },
+    "carousel-post-copywriter": {
+      "name": "Carousel Post Copywriter",
+      "role": "Carousel Copy Generation",
+      "description": "Generates carousel slide copy and captions from the Framework Library plus voice guide. Tuned for save-rate and share behavior, not surface likes.",
+      "tag": "ON_DEMAND",
+      "schedule": "On demand"
+    }
+  }
+}
