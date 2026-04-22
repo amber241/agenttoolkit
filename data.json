@@ -35,7 +35,7 @@
       "initial": "T",
       "tier": 2,
       "reportsTo": "amber",
-      "aiEmployees": ["social-media-data-analyst"]
+      "aiEmployees": ["social-media-data-analyst", "hooks-specialist"]
     },
     {
       "id": "hannah",
@@ -51,8 +51,9 @@
     "social-media-data-analyst": {
       "name": "Social Media Data Analyst",
       "role": "IG Analyzer",
-      "description": "Scrapes competitor and inspiration posts nightly. Transcribes audio with Whisper. OCRs on-screen text. Writes structured per-post reports.",
+      "description": "Scrapes competitor and inspiration posts nightly. Transcribes audio with Whisper. OCRs on-screen text. Writes structured per-post reports. On-demand mode (paste URLs in Cowork) in build.",
       "tag": "SCHEDULED",
+      "status": "LIVE",
       "schedule": "Daily 6:00 AM"
     },
     "daily-competitor-brief-writer": {
@@ -60,6 +61,7 @@
       "role": "Daily Competitive Intelligence",
       "description": "Reads yesterday's raw reports. Synthesizes a tactical daily brief with hooks, frameworks, CTAs, and actionable takeaways in the Framework Library format.",
       "tag": "SCHEDULED",
+      "status": "LIVE",
       "schedule": "Daily 7:00 AM"
     },
     "weekly-competitor-brief-writer": {
@@ -67,13 +69,23 @@
       "role": "Weekly Strategic Intelligence",
       "description": "Zooms out across seven days of briefs and reports. Produces a weekly content plan with hooks, frameworks, and CTAs pre-assigned to each proposed post.",
       "tag": "SCHEDULED",
+      "status": "LIVE",
       "schedule": "Mondays 8:00 AM"
+    },
+    "hooks-specialist": {
+      "name": "Hooks Specialist",
+      "role": "Hook Intelligence",
+      "description": "Scans new reel analyses, competitor briefs, and transcripts. Extracts high-performing hooks. Tags each by pattern, source, date, and why it works. Appends to the Hook Library and deduplicates. Runs scheduled after the Social Media Data Analyst, or on demand.",
+      "tag": "SCHEDULED",
+      "status": "BUILDING",
+      "schedule": "Daily 6:30 AM"
     },
     "reel-script-copywriter": {
       "name": "Reel Script Copywriter",
       "role": "Reel Script Generation",
-      "description": "Consumes the Framework Library plus voice guide plus weekly plan. Generates reel scripts with beat-by-beat structure in Amber's voice.",
+      "description": "Generates reel scripts in Amber's voice. Multiple hook options pulled from the Hook Library. Beat-by-beat structure, thumbnail text, short and SEO captions. Enforces 5th-grade reading level and contrarian POV per the Style Spec. Two modes: on-demand single reel, or weekly batch from the Weekly Brief.",
       "tag": "ON_DEMAND",
+      "status": "BUILDING",
       "schedule": "On demand"
     },
     "carousel-post-copywriter": {
@@ -81,6 +93,7 @@
       "role": "Carousel Copy Generation",
       "description": "Generates carousel slide copy and captions from the Framework Library plus voice guide. Tuned for save-rate and share behavior, not surface likes.",
       "tag": "ON_DEMAND",
+      "status": "PLANNED",
       "schedule": "On demand"
     }
   }
