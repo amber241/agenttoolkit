@@ -419,45 +419,56 @@
   .generate-btn.ready:hover { background: var(--gold-hover); transform: translateY(-1px); }
 
   /* ─── SCRIPTS TAB ───────────────────────────── */
-  .scripts-grid { display: flex; flex-direction: column; gap: 20px; max-width: 800px; }
-  .script-card {
-    background: var(--white);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow);
-    overflow: hidden;
+  .scripts-grid { display: flex; flex-direction: column; gap: 24px; max-width: 860px; }
+  .script-card { background: var(--white); border-radius: var(--radius-lg); box-shadow: var(--shadow); overflow: hidden; }
+
+  .sc-header { padding: 18px 20px 16px; border-bottom: 1px solid var(--cream-dark); display: flex; align-items: flex-start; gap: 14px; }
+  .sc-header-main { flex: 1; min-width: 0; }
+  .sc-title { font-family: 'Instrument Serif', Georgia, serif; font-size: 20px; font-weight: 400; color: var(--navy); line-height: 1.25; margin-bottom: 12px; }
+  .sc-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .sc-tag { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; white-space: nowrap; }
+  .sc-tag.date       { background: #f0e8e0; color: #7a5540; }
+  .sc-tag.format     { background: #e8ebd6; color: #4e5a2a; }
+  .sc-tag.goal       { background: #d8eee8; color: #2a6050; }
+  .sc-tag.topic      { background: #e8e0f0; color: #5a3a80; }
+  .sc-tag.hook-tag   { background: #dce8f5; color: #2a4a80; }
+  .sc-tag.tension    { background: #f5e0e8; color: #803050; }
+  .sc-tag.resolution { background: #fae8d0; color: #804020; }
+
+  .sc-section { border-top: 1px solid var(--cream-dark); }
+  .sc-section-toggle {
+    width: 100%; display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 20px; background: none; border: none; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 700;
+    color: var(--text-muted); text-align: left; letter-spacing: .04em; text-transform: uppercase;
   }
-  .script-card-header {
-    padding: 14px 18px;
-    border-bottom: 1px solid var(--cream-dark);
-    display: flex; align-items: center; gap: 12px;
-  }
-  .script-card-meta { flex: 1; }
-  .script-card-format { font-size: 13px; font-weight: 700; color: var(--text); }
-  .script-card-day { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-  .script-card-pick { font-size: 11px; font-weight: 600; color: var(--gold); margin-top: 2px; }
-  .script-status { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
-  .script-status.empty { background: var(--stone-light); color: var(--stone); }
-  .script-status.has-content { background: var(--green-light); color: var(--green); }
-  .script-textarea {
-    width: 100%; min-height: 180px; padding: 16px 18px;
-    font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--text);
-    background: var(--cream); border: none; resize: vertical; outline: none;
-    line-height: 1.65;
-  }
-  .script-textarea::placeholder { color: var(--text-muted); font-style: italic; }
-  .script-textarea:focus { background: #fffdf9; }
-  .scripts-footer {
-    margin-top: 8px; padding: 16px 0 0;
-    display: flex; align-items: center; justify-content: space-between; gap: 16px;
-    border-top: 1px solid var(--cream-dark);
-  }
+  .sc-section-toggle:hover { background: var(--cream); color: var(--text); }
+  .sc-section-chevron { font-size: 14px; transition: transform .2s; }
+  .sc-section.open .sc-section-chevron { transform: rotate(180deg); }
+  .sc-section-body { display: none; padding: 4px 20px 16px; }
+  .sc-section.open .sc-section-body { display: block; }
+
+  .hook-options { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+  .hook-option { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border-radius: 8px; border: 1.5px solid var(--cream-dark); cursor: pointer; transition: all .12s; }
+  .hook-option:hover { border-color: var(--gold-border); background: var(--gold-light); }
+  .hook-option.selected { border-color: var(--gold-border); background: var(--gold-light); }
+  .hook-option input[type=radio] { margin-top: 3px; flex-shrink: 0; accent-color: #a8a676; }
+  .hook-option-text { font-size: 13px; color: var(--text); line-height: 1.45; }
+  .hook-custom-label { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .07em; margin: 12px 0 6px; }
+  .hook-custom-input { width: 100%; padding: 10px 12px; border: 1.5px solid var(--cream-dark); border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--text); background: var(--cream); outline: none; transition: border-color .15s; }
+  .hook-custom-input:focus { border-color: var(--gold-border); background: #fffdf9; }
+  .hook-custom-input::placeholder { color: var(--text-muted); font-style: italic; }
+
+  .sc-textarea { width: 100%; min-height: 200px; padding: 12px 14px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--text); background: var(--cream); border: 1.5px solid var(--cream-dark); border-radius: 8px; resize: vertical; outline: none; line-height: 1.65; transition: border-color .15s; }
+  .sc-textarea:focus { border-color: var(--gold-border); background: #fffdf9; }
+
+  .caption-tabs { display: flex; gap: 6px; margin-bottom: 10px; }
+  .caption-tab-btn { padding: 5px 14px; border-radius: 20px; border: 1.5px solid var(--cream-dark); background: none; font-size: 12px; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: all .12s; font-family: 'DM Sans', sans-serif; }
+  .caption-tab-btn.active { background: var(--navy); border-color: var(--navy); color: #fff; }
+
+  .scripts-footer { margin-top: 8px; padding: 16px 0 0; display: flex; align-items: center; justify-content: space-between; gap: 16px; border-top: 1px solid var(--cream-dark); }
   .scripts-footer-note { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
-  .notion-btn {
-    flex-shrink: 0; padding: 11px 24px;
-    background: var(--navy); border: none; border-radius: var(--radius-sm);
-    color: #fff; font-size: 13px; font-weight: 700;
-    cursor: pointer; transition: all 0.2s; white-space: nowrap;
-  }
+  .notion-btn { flex-shrink: 0; padding: 11px 24px; background: var(--navy); border: none; border-radius: var(--radius-sm); color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
   .notion-btn:hover { background: var(--navy-mid); }
   .notion-btn.sent { background: var(--green); }
 
@@ -946,63 +957,220 @@ function updateCounts() {
 }
 
 // ─── SCRIPTS TAB ───────────────────────────────────────
-function getScriptEdits() {
-  try { return JSON.parse(localStorage.getItem(SCRIPTS_KEY) || '{}'); } catch(e) { return {}; }
+const SC_EDITS_KEY = `atk-sc-edits-${WEEK}`;
+function getScEdits() { try { return JSON.parse(localStorage.getItem(SC_EDITS_KEY)||'{}'); } catch(e){ return {}; } }
+function saveScEdit(slotId, field, val) {
+  const e = getScEdits(); if (!e[slotId]) e[slotId]={};
+  e[slotId][field] = val;
+  try { localStorage.setItem(SC_EDITS_KEY, JSON.stringify(e)); } catch(ex){}
 }
-function saveScriptEdit(slotId, text) {
-  const edits = getScriptEdits();
-  edits[slotId] = text;
-  try { localStorage.setItem(SCRIPTS_KEY, JSON.stringify(edits)); } catch(e) {}
+function getScEdit(slotId, field, fallback) {
+  const e = getScEdits();
+  return (e[slotId] && e[slotId][field] !== undefined) ? e[slotId][field] : fallback;
 }
-function getScriptText(slotId) {
-  const edits = getScriptEdits();
-  // localStorage edits take priority over baked-in SCRIPTS
-  if (edits[slotId] !== undefined) return edits[slotId];
-  return SCRIPTS[slotId] || '';
+
+function parseScript(md) {
+  if (!md || !md.trim()) return null;
+  const r = { title:'', date:'', format:'', goal:'', topic:'', hookPattern:'', tensionPattern:'', resolutionPattern:'', hookOptions:[], recommendedHook:'', script:'', captionShort:'', captionSeo:'' };
+  // frontmatter
+  const fm = md.match(/^---\n([\s\S]*?)\n---/);
+  if (fm) {
+    r.topic   = (fm[1].match(/^topic:\s*(.+)$/m)||[])[1]||'';
+    r.goal    = (fm[1].match(/^goal:\s*(.+)$/m)||[])[1]||'';
+    r.format  = (fm[1].match(/^format:\s*(.+)$/m)||[])[1]||'';
+    r.date    = (fm[1].match(/^date:\s*(.+)$/m)||[])[1]||'';
+  }
+  // title
+  const tm = md.match(/^# (.+)$/m); r.title = tm ? tm[1] : '';
+  // patterns
+  const hp = md.match(/\*\*Hook pattern:\*\*\s*(.+)/);
+  r.hookPattern = hp ? hp[1].replace(/\s*\(Hook Library[^)]*\)/g,'').replace(/\s*\(Hook Library[^)]*$/,'').trim() : '';
+  const tp = md.match(/\*\*Tension pattern:\*\*\s*(.+)/);
+  r.tensionPattern = tp ? tp[1].replace(/\s*\([^)]*\)$/,'').trim() : '';
+  const rp = md.match(/\*\*Resolution pattern:\*\*\s*(.+)/);
+  r.resolutionPattern = rp ? rp[1].replace(/\s*\([^)]*\)$/,'').trim() : '';
+  // hook options
+  const hookSec = md.match(/## Hook options[\s\S]*?\n\n([\s\S]*?)(?=\n\*\*Recommended|\n## )/);
+  if (hookSec) {
+    const opts = [];
+    hookSec[1].split('\n').forEach(line => {
+      const m = line.match(/^\d+\.\s+\*\*(.+?)\*\*/);
+      if (m) opts.push({ text: m[1].replace(/ ← RECOMMENDED.*/,'').trim(), rec: line.includes('← RECOMMENDED') });
+    });
+    r.hookOptions = opts;
+    const rec = opts.find(o=>o.rec) || opts[0];
+    r.recommendedHook = rec ? rec.text : '';
+  }
+  // script (reel beat-by-beat)
+  const scriptSec = md.match(/## Script \(beat-by-beat\)\n\n([\s\S]*?)(?=\n---\n\n## Thumbnail|\n## Thumbnail|\n---\n## Captions)/);
+  if (scriptSec) {
+    r.script = scriptSec[1].trim();
+  } else {
+    // carousel slides
+    const slides = [...md.matchAll(/## (Slide \d+[^\n]*)\n([\s\S]*?)(?=\n## (?:Slide|Caption|Style)|\n---\n\n## Captions|\n---\n## Captions|$)/g)];
+    if (slides.length) r.script = slides.map(s=>`${s[1].trim()}\n${s[2].trim()}`).join('\n\n');
+  }
+  // captions
+  const cs = md.match(/### Short \(for reach\)\n([\s\S]*?)(?=\n### SEO|$)/);
+  r.captionShort = cs ? cs[1].trim() : '';
+  const ceo = md.match(/### SEO \(for search\)\n([\s\S]*?)(?=\n---\n\n## Style|\n## Style|$)/);
+  r.captionSeo = ceo ? ceo[1].trim() : '';
+  return r;
 }
 
 function renderScripts() {
   const grid = document.getElementById('scriptsGrid');
-  const edits = getScriptEdits();
-  let filledCount = 0;
   grid.innerHTML = '';
+  let filledCount = 0;
   SLOTS.forEach(slot => {
+    const rawMd = SCRIPTS[slot.id] || '';
+    const parsed = parseScript(rawMd);
+    if (rawMd.trim()) filledCount++;
     const pickedLetter = getPickedLetter(slot.id);
-    const pickedIdea = pickedLetter ? slot.ideas.find(i => i.letter === pickedLetter) : null;
-    const text = getScriptText(slot.id);
-    const hasContent = text.trim().length > 0;
-    if (hasContent) filledCount++;
+    const pickedIdea = pickedLetter ? slot.ideas.find(i=>i.letter===pickedLetter) : null;
+
+    // edits from localStorage
+    const savedHook    = getScEdit(slot.id, 'hook',    parsed ? parsed.recommendedHook : '');
+    const savedScript  = getScEdit(slot.id, 'script',  parsed ? parsed.script : '');
+    const savedCapType = getScEdit(slot.id, 'capType', 'short');
+    const savedCapText = getScEdit(slot.id, 'capText', parsed ? (savedCapType==='seo' ? parsed.captionSeo : parsed.captionShort) : '');
+
     const card = document.createElement('div');
     card.className = 'script-card';
+
+    // build tags html
+    let tagsHtml = '';
+    if (parsed) {
+      const fmt = parsed.format || slot.format;
+      const tags = [
+        { cls:'date',       text: parsed.date || slot.date },
+        { cls:'format',     text: fmt },
+        { cls:'goal',       text: parsed.goal },
+        { cls:'topic',      text: parsed.topic },
+        { cls:'hook-tag',   text: parsed.hookPattern },
+        { cls:'tension',    text: parsed.tensionPattern },
+        { cls:'resolution', text: parsed.resolutionPattern },
+      ].filter(t => t.text);
+      tagsHtml = tags.map(t=>`<span class="sc-tag ${t.cls}">${t.text}</span>`).join('');
+    }
+
+    // hook options html
+    let hookHtml = '';
+    if (parsed && parsed.hookOptions.length) {
+      const opts = parsed.hookOptions.map((o,i) => `
+        <label class="hook-option ${savedHook===o.text?'selected':''}">
+          <input type="radio" name="hook-${slot.id}" value="${o.text.replace(/"/g,'&quot;')}" ${savedHook===o.text?'checked':''}>
+          <span class="hook-option-text">${o.text}</span>
+        </label>`).join('');
+      hookHtml = `<div class="hook-options">${opts}</div>
+        <div class="hook-custom-label">Or write your own</div>
+        <input class="hook-custom-input" type="text" data-slot="${slot.id}" data-field="hook" placeholder="Type a custom hook line…" value="${(!parsed.hookOptions.find(o=>o.text===savedHook)&&savedHook)?savedHook.replace(/"/g,'&quot;'):''}">`;
+    } else {
+      hookHtml = `<input class="hook-custom-input" type="text" data-slot="${slot.id}" data-field="hook" placeholder="Write your hook line here…" value="${savedHook?savedHook.replace(/"/g,'&quot;'):''}">`;
+    }
+
+    const title = parsed ? parsed.title : (pickedIdea ? pickedIdea.title : slot.format);
+    const hasContent = rawMd.trim().length > 0;
+
     card.innerHTML = `
-      <div class="script-card-header">
+      <div class="sc-header">
         <div class="day-block">
           <span class="day-short">${slot.dayShort}</span>
           <span class="day-date">${slot.date}</span>
         </div>
-        <div class="script-card-meta">
-          <div class="script-card-format">${slot.format}</div>
-          ${pickedIdea ? `<div class="script-card-pick">→ ${pickedIdea.title}</div>` : '<div class="script-card-day">No idea picked yet</div>'}
+        <div class="sc-header-main">
+          <div class="sc-title">${title || (pickedIdea ? pickedIdea.title : slot.format)}</div>
+          <div class="sc-tags">${tagsHtml || `<span class="sc-tag format">${slot.format}</span>`}</div>
         </div>
-        <span class="script-status ${hasContent ? 'has-content' : 'empty'}">${hasContent ? '✓ Ready' : 'Awaiting script'}</span>
       </div>
-      <textarea class="script-textarea" data-slot="${slot.id}" placeholder="Paste Claude's script here, or it will auto-populate after you generate…">${text}</textarea>
+
+      <div class="sc-section ${hasContent?'open':''}">
+        <button class="sc-section-toggle">Hook Line <span class="sc-section-chevron">▾</span></button>
+        <div class="sc-section-body">${hookHtml}</div>
+      </div>
+
+      <div class="sc-section ${hasContent?'open':''}">
+        <button class="sc-section-toggle">Script / Slides <span class="sc-section-chevron">▾</span></button>
+        <div class="sc-section-body">
+          <textarea class="sc-textarea" data-slot="${slot.id}" data-field="script" rows="12">${(savedScript||'').replace(/</g,'&lt;')}</textarea>
+        </div>
+      </div>
+
+      <div class="sc-section">
+        <button class="sc-section-toggle">Caption <span class="sc-section-chevron">▾</span></button>
+        <div class="sc-section-body">
+          <div class="caption-tabs">
+            <button class="caption-tab-btn ${savedCapType==='short'?'active':''}" data-slot="${slot.id}" data-captype="short">Short</button>
+            <button class="caption-tab-btn ${savedCapType==='seo'?'active':''}" data-slot="${slot.id}" data-captype="seo">SEO</button>
+          </div>
+          <textarea class="sc-textarea" data-slot="${slot.id}" data-field="capText" rows="8">${(savedCapText||'').replace(/</g,'&lt;')}</textarea>
+        </div>
+      </div>
     `;
     grid.appendChild(card);
   });
-  // attach save-on-type
-  grid.querySelectorAll('.script-textarea').forEach(ta => {
-    ta.addEventListener('input', () => {
-      saveScriptEdit(parseInt(ta.dataset.slot), ta.value);
-      updateScriptCount();
+
+  // section toggles
+  grid.querySelectorAll('.sc-section-toggle').forEach(btn => {
+    btn.addEventListener('click', () => btn.closest('.sc-section').classList.toggle('open'));
+  });
+
+  // hook radio
+  grid.querySelectorAll('.hook-option input[type=radio]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      const slotId = parseInt(radio.closest('.sc-section-body').querySelector('.hook-custom-input').dataset.slot);
+      radio.closest('.sc-section-body').querySelectorAll('.hook-option').forEach(o=>o.classList.remove('selected'));
+      radio.closest('.hook-option').classList.add('selected');
+      radio.closest('.sc-section-body').querySelector('.hook-custom-input').value = '';
+      saveScEdit(slotId, 'hook', radio.value);
     });
   });
+
+  // hook custom input
+  grid.querySelectorAll('.hook-custom-input').forEach(inp => {
+    inp.addEventListener('input', () => {
+      if (inp.value) {
+        inp.closest('.sc-section-body').querySelectorAll('.hook-option').forEach(o=>{ o.classList.remove('selected'); o.querySelector('input').checked=false; });
+      }
+      saveScEdit(parseInt(inp.dataset.slot), 'hook', inp.value);
+    });
+  });
+
+  // script textarea
+  grid.querySelectorAll('.sc-textarea[data-field="script"]').forEach(ta => {
+    ta.addEventListener('input', () => saveScEdit(parseInt(ta.dataset.slot), 'script', ta.value));
+  });
+
+  // caption type toggle
+  grid.querySelectorAll('.caption-tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const slotId = parseInt(btn.dataset.slot);
+      const type = btn.dataset.captype;
+      btn.closest('.caption-tabs').querySelectorAll('.caption-tab-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      saveScEdit(slotId, 'capType', type);
+      // update textarea
+      const parsed = parseScript(SCRIPTS[slotId]||'');
+      const fallback = parsed ? (type==='seo' ? parsed.captionSeo : parsed.captionShort) : '';
+      const existingEdit = getScEdit(slotId, 'capText', fallback);
+      // if they haven't custom-edited, swap to the other version
+      const ta = btn.closest('.sc-section-body').querySelector('.sc-textarea');
+      ta.value = fallback;
+      saveScEdit(slotId, 'capText', fallback);
+    });
+  });
+
+  // caption textarea
+  grid.querySelectorAll('.sc-textarea[data-field="capText"]').forEach(ta => {
+    ta.addEventListener('input', () => saveScEdit(parseInt(ta.dataset.slot), 'capText', ta.value));
+  });
+
   document.getElementById('count-scripts').textContent = `${filledCount}/6`;
 }
 
 function updateScriptCount() {
   let count = 0;
-  SLOTS.forEach(s => { if (getScriptText(s.id).trim()) count++; });
+  SLOTS.forEach(s => { if ((SCRIPTS[s.id]||'').trim()) count++; });
   document.getElementById('count-scripts').textContent = `${count}/6`;
 }
 
@@ -1011,10 +1179,12 @@ document.getElementById('notionBtn').addEventListener('click', () => {
   const lines = SLOTS.map(slot => {
     const pickedLetter = getPickedLetter(slot.id);
     const pickedIdea = pickedLetter ? slot.ideas.find(i => i.letter === pickedLetter) : null;
-    const scriptText = getScriptText(slot.id).trim();
-    return `--- ${slot.day} ${slot.date}: ${slot.format} ---\nIdea: ${pickedIdea ? pickedIdea.title : 'Not selected'}\n\n${scriptText || '[No script yet]'}`;
+    const hook   = getScEdit(slot.id, 'hook', '');
+    const script = getScEdit(slot.id, 'script', (SCRIPTS[slot.id]||''));
+    const cap    = getScEdit(slot.id, 'capText', '');
+    return `--- ${slot.day} ${slot.date}: ${slot.format} ---\nTitle: ${pickedIdea ? pickedIdea.title : 'Not selected'}\nHook: ${hook||'[not selected]'}\n\nScript:\n${script||'[no script]'}\n\nCaption:\n${cap||'[no caption]'}`;
   }).join('\n\n');
-  const prompt = `Here are this week's 6 approved scripts. Please create a Notion entry for each one in the ATK Instagram Calendar — one page per script, with the day, format, and script body.\n\n${lines}`;
+  const prompt = `Here are this week's 6 approved scripts. Please create a Notion entry for each one in the ATK Instagram Calendar.\n\n${lines}`;
   navigator.clipboard.writeText(prompt).then(() => {
     const btn = document.getElementById('notionBtn');
     btn.textContent = '✓ Copied — paste into chat';
