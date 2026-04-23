@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ATK Member Templates</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --brown: #6e5645;
+    --brown-light: #9a7a68;
+    --cream: #fefaf7;
+    --cream-mid: #f5ede4;
+    --sage: #bfbd8f;
+    --sage-dark: #8a8860;
+    --text: #2d2018;
+    --text-mid: #5a4438;
+    --border: #e0d4ca;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
+
+  /* ── GATE ── */
+  #gate {
+    display: flex; align-items: center; justify-content: center;
+    min-height: 100vh; background: var(--cream);
+  }
+  .gate-box {
+    background: #fff; border: 1px solid var(--border); border-radius: 16px;
+    padding: 48px 40px; width: 360px; text-align: center;
+    box-shadow: 0 4px 24px rgba(110,86,69,.08);
+  }
+  .gate-logo { font-family: 'Instrument Serif', serif; font-size: 28px; color: var(--brown); margin-bottom: 8px; }
+  .gate-sub { font-size: 13px; color: var(--brown-light); margin-bottom: 32px; letter-spacing: .04em; text-transform: uppercase; }
+  .gate-box input {
+    width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px;
+    font-family: 'DM Sans', sans-serif; font-size: 15px; background: var(--cream);
+    color: var(--text); outline: none; margin-bottom: 12px; letter-spacing: .1em;
+  }
+  .gate-box input:focus { border-color: var(--brown); }
+  .gate-btn {
+    width: 100%; padding: 12px; background: var(--brown); color: #fff; border: none;
+    border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 15px;
+    font-weight: 500; cursor: pointer; transition: background .2s;
+  }
+  .gate-btn:hover { background: var(--brown-light); }
+  .gate-err { font-size: 13px; color: #c0392b; margin-top: 10px; display: none; }
+
+  /* ── APP ── */
+  #app { display: none; }
+  header {
+    background: #fff; border-bottom: 1px solid var(--border);
+    padding: 0 32px; display: flex; align-items: center; gap: 24px;
+    position: sticky; top: 0; z-index: 100; height: 56px;
+  }
+  .header-logo { font-family: 'Instrument Serif', serif; font-size: 20px; color: var(--brown); }
+  .header-week { font-size: 13px; color: var(--brown-light); }
+  .header-count {
+    margin-left: auto; font-size: 12px; color: var(--text-mid);
+    background: var(--cream-mid); padding: 4px 10px; border-radius: 20px;
+  }
+
+  /* ── EMPTY STATE ── */
+  #empty {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: 60vh; text-align: center; padding: 40px;
+  }
+  .empty-title { font-family: 'Instrument Serif', serif; font-size: 26px; color: var(--brown); margin-bottom: 12px; }
+  .empty-body { font-size: 15px; color: var(--brown-light); line-height: 1.6; max-width: 440px; }
+
+  /* ── GRID ── */
+  #grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
+    gap: 20px; padding: 28px 32px;
+  }
+
+  /* ── TEMPLATE CARD ── */
+  .tc {
+    background: #fff; border: 1px solid var(--border); border-radius: 14px;
+    overflow: hidden; box-shadow: 0 2px 12px rgba(110,86,69,.05);
+  }
+  .tc-head {
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .tc-day { font-size: 11px; font-weight: 600; color: var(--brown-light); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 6px; }
+  .tc-title { font-family: 'Instrument Serif', serif; font-size: 19px; color: var(--text); line-height: 1.3; margin-bottom: 10px; }
+  .tc-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  /* Tags */
+  .tc-tag {
+    font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: 20px;
+    letter-spacing: .02em;
+  }
+  .tc-tag.format-reel     { background: #dce8f5; color: #2a4a80; }
+  .tc-tag.format-carousel { background: #e8ebd6; color: #4e5a2a; }
+  .tc-tag.format-broll    { background: #f5e0e8; color: #803050; }
+  .tc-tag.ctype           { background: #f0e8e0; color: #7a5540; }
+
+  /* ── ACCORDION SECTIONS ── */
+  .tc-section { border-bottom: 1px solid var(--border); }
+  .tc-section:last-child { border-bottom: none; }
+  .tc-section-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 20px; cursor: pointer; user-select: none;
+    font-size: 12px; font-weight: 600; color: var(--brown-light);
+    letter-spacing: .05em; text-transform: uppercase;
+    transition: background .15s;
+  }
+  .tc-section-head:hover { background: var(--cream); }
+  .tc-chevron { font-size: 10px; transition: transform .2s; }
+  .tc-section.open .tc-chevron { transform: rotate(180deg); }
+  .tc-section-body { display: none; padding: 14px 20px 16px; }
+  .tc-section.open .tc-section-body { display: block; }
+
+  /* NOTE */
+  .tc-note {
+    font-size: 13.5px; color: var(--text-mid); line-height: 1.65;
+    background: var(--cream); border-left: 3px solid var(--sage);
+    padding: 12px 14px; border-radius: 0 6px 6px 0;
+  }
+
+  /* HOOKS */
+  .hook-list { list-style: none; display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+  .hook-item label {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 13.5px; color: var(--text); line-height: 1.5; cursor: pointer;
+    padding: 8px 10px; border-radius: 8px; transition: background .15s;
+  }
+  .hook-item label:hover { background: var(--cream); }
+  .hook-item input[type=radio] { margin-top: 3px; accent-color: var(--brown); flex-shrink: 0; }
+  .hook-item.recommended label { font-weight: 500; }
+  .hook-rec-badge {
+    font-size: 10px; background: var(--sage); color: #fff; padding: 2px 7px;
+    border-radius: 10px; font-weight: 600; letter-spacing: .03em; white-space: nowrap; margin-left: 4px;
+  }
+  .hook-custom-wrap { margin-top: 6px; }
+  .hook-custom-wrap label { font-size: 11px; color: var(--brown-light); margin-bottom: 4px; display: block; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+  .hook-custom-input {
+    width: 100%; padding: 9px 12px; border: 1px solid var(--border); border-radius: 8px;
+    font-family: 'DM Sans', sans-serif; font-size: 13.5px; color: var(--text);
+    background: var(--cream); resize: none; outline: none;
+  }
+  .hook-custom-input:focus { border-color: var(--brown); }
+
+  /* SLIDES */
+  .slides-list { display: flex; flex-direction: column; gap: 10px; }
+  .slide-item { background: var(--cream); border-radius: 8px; padding: 12px 14px; }
+  .slide-label { font-size: 11px; font-weight: 600; color: var(--brown-light); letter-spacing: .05em; text-transform: uppercase; margin-bottom: 6px; }
+  .slide-body { font-size: 13.5px; color: var(--text); line-height: 1.6; white-space: pre-wrap; }
+
+  /* CAPTION */
+  .cap-tabs { display: flex; gap: 4px; margin-bottom: 10px; }
+  .cap-tab {
+    font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 20px;
+    cursor: pointer; border: 1px solid var(--border); background: transparent;
+    color: var(--brown-light); font-family: 'DM Sans', sans-serif; letter-spacing: .03em;
+    transition: all .15s;
+  }
+  .cap-tab.active { background: var(--brown); color: #fff; border-color: var(--brown); }
+  .cap-textarea {
+    width: 100%; min-height: 220px; padding: 12px 14px;
+    border: 1px solid var(--border); border-radius: 8px;
+    font-family: 'DM Sans', sans-serif; font-size: 13.5px; color: var(--text);
+    background: var(--cream); resize: vertical; outline: none; line-height: 1.65;
+  }
+  .cap-textarea:focus { border-color: var(--brown); }
+  .bracket { background: #fff3cd; border-radius: 3px; padding: 0 2px; }
+
+  /* NOTION BUTTON */
+  .tc-footer { padding: 12px 20px; background: var(--cream); display: flex; justify-content: flex-end; }
+  .notion-btn {
+    font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600;
+    padding: 7px 16px; border-radius: 8px; border: 1px solid var(--border);
+    background: #fff; color: var(--brown); cursor: pointer; letter-spacing: .02em;
+    transition: all .15s;
+  }
+  .notion-btn:hover { background: var(--brown); color: #fff; border-color: var(--brown); }
+  .notion-btn.sent { background: var(--sage); color: #fff; border-color: var(--sage); }
+</style>
+</head>
+<body>
+
+<!-- GATE -->
+<div id="gate">
+  <div class="gate-box">
+    <div class="gate-logo">Agent Toolkit</div>
+    <div class="gate-sub">Member Templates</div>
+    <input type="password" id="gate-input" placeholder="Password" onkeydown="if(event.key==='Enter')tryLogin()">
+    <button class="gate-btn" onclick="tryLogin()">Enter</button>
+    <div class="gate-err" id="gate-err">Incorrect password.</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <header>
+    <div class="header-logo">Agent Toolkit</div>
+    <div class="header-week" id="header-week"></div>
+    <div class="header-count" id="header-count"></div>
+  </header>
+  <div id="empty" style="display:none">
+    <div class="empty-title">No templates loaded yet.</div>
+    <div class="empty-body">Generate this week's member templates in your trained chat project, then ask Cowork to push them here.</div>
+  </div>
+  <div id="grid"></div>
+</div>
+
+<script>
+// ── AUTH ──────────────────────────────────────────────────────────────────
+const PASS = 'ATK123!';
+const AUTH_KEY = 'atk-mt-auth';
+
+function tryLogin() {
+  const val = document.getElementById('gate-input').value;
+  if (val === PASS) {
+    localStorage.setItem(AUTH_KEY, '1');
+    showApp();
+  } else {
+    document.getElementById('gate-err').style.display = 'block';
+  }
+}
+
+function showApp() {
+  document.getElementById('gate').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  renderTemplates();
+}
+
+if (localStorage.getItem(AUTH_KEY) === '1') showApp();
+
+// ── TEMPLATES DATA ────────────────────────────────────────────────────────
+// Populated automatically by Cowork after each generation run.
+// Format: { "WEEK": "2026-04-28", "templates": [ { raw: "..." }, ... ] }
+const DATA = {"WEEK":"","templates":[]};
+
+// ── PARSE ─────────────────────────────────────────────────────────────────
+function parseTemplate(raw) {
+  const t = {
+    day: '', date: '', topic: '', format: '', contentType: '',
+    note: '', hooks: [], slides: [], captionShort: '', captionSeo: ''
+  };
+
+  // Day / date header:  ## Day 1 — Monday, April 27, 2026
+  const dayM = raw.match(/^##\s+(.+?)(?:\n|$)/m);
+  if (dayM) {
+    const full = dayM[1]; // "Day 1 — Monday, April 27, 2026"
+    const dateM = full.match(/(\w+,\s+\w+\s+\d+,\s+\d+)/);
+    t.date = dateM ? dateM[1] : '';
+    const dayNumM = full.match(/Day\s+(\d+)/i);
+    t.day = dayNumM ? 'Day ' + dayNumM[1] : full.split('—')[0].trim();
+  }
+
+  // Metadata lines
+  const topicM = raw.match(/\*\*Topic:\*\*\s*(.+)/);
+  t.topic = topicM ? topicM[1].trim() : '';
+  const fmtM  = raw.match(/\*\*Format:\*\*\s*(.+)/);
+  if (fmtM) {
+    const parts = fmtM[1].split('|').map(s=>s.trim());
+    t.format = parts[0] || '';
+    t.contentType = parts[1] || '';
+  }
+
+  // NOTE
+  const noteM = raw.match(/^NOTE:\s*\n([\s\S]*?)(?=\n(?:HOOK MODIFICATIONS|CAROUSEL SLIDES|CAPTION):|$)/im);
+  t.note = noteM ? noteM[1].trim() : '';
+
+  // HOOK MODIFICATIONS
+  const hookSec = raw.match(/^HOOK MODIFICATIONS:\s*\n([\s\S]*?)(?=\n(?:CAROUSEL SLIDES|CAPTION):|$)/im);
+  if (hookSec) {
+    hookSec[1].split('\n').forEach(line => {
+      const m = line.match(/^\*\s+(.+)/);
+      if (!m) return;
+      let text = m[1].trim();
+      const rec = text.includes('← RECOMMENDED') || text.includes('← recommended');
+      text = text.replace(/\s*←\s*RECOMMENDED.*/i,'').trim();
+      // strip leading/trailing bold
+      text = text.replace(/^\*\*(.+?)\*\*$/,'$1');
+      if (text) t.hooks.push({ text, rec });
+    });
+  }
+
+  // CAROUSEL SLIDES
+  const slidesSec = raw.match(/^CAROUSEL SLIDES:\s*\n([\s\S]*?)(?=\nCAPTION:|$)/im);
+  if (slidesSec) {
+    const raw_slides = slidesSec[1];
+    // Split on "Slide N" headings
+    const parts = raw_slides.split(/(?=^Slide\s+\d+)/im).filter(s=>s.trim());
+    parts.forEach(part => {
+      const labelM = part.match(/^(Slide\s+\d+[^\n]*)/i);
+      const label = labelM ? labelM[1].trim() : '';
+      const body = part.replace(/^Slide\s+\d+[^\n]*\n?/i,'').trim();
+      if (label || body) t.slides.push({ label, body });
+    });
+  }
+
+  // CAPTION — Short and SEO
+  const capM = raw.match(/^CAPTION:\s*\n([\s\S]*?)$/im);
+  if (capM) {
+    const capRaw = capM[1];
+    const seoM = capRaw.match(/^---\s*\nSEO[^\n]*\n([\s\S]*?)$/im);
+    if (seoM) {
+      t.captionSeo = seoM[1].trim();
+      t.captionShort = capRaw.slice(0, capRaw.search(/^---/im)).trim();
+    } else {
+      t.captionShort = capRaw.trim();
+    }
+  }
+
+  return t;
+}
+
+// ── STORAGE ───────────────────────────────────────────────────────────────
+const WEEK = DATA.WEEK || 'no-week';
+const EDIT_KEY = `atk-mt-edits-${WEEK}`;
+
+function loadEdits() {
+  try { return JSON.parse(localStorage.getItem(EDIT_KEY) || '{}'); } catch { return {}; }
+}
+function saveEdit(idx, field, val) {
+  const edits = loadEdits();
+  if (!edits[idx]) edits[idx] = {};
+  edits[idx][field] = val;
+  localStorage.setItem(EDIT_KEY, JSON.stringify(edits));
+}
+function getEdit(idx, field, fallback) {
+  const edits = loadEdits();
+  return (edits[idx] && edits[idx][field] !== undefined) ? edits[idx][field] : fallback;
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────
+function highlightBrackets(text) {
+  return text.replace(/\[([^\]]+)\]/g, '<span class="bracket">[$1]</span>');
+}
+
+function formatTag(format) {
+  const f = (format || '').toLowerCase();
+  if (f.includes('reel'))     return `<span class="tc-tag format-reel">Reel</span>`;
+  if (f.includes('carousel')) return `<span class="tc-tag format-carousel">Carousel</span>`;
+  if (f.includes('b-roll') || f.includes('broll')) return `<span class="tc-tag format-broll">B-Roll</span>`;
+  return format ? `<span class="tc-tag format-reel">${format}</span>` : '';
+}
+
+function renderTemplates() {
+  if (!DATA.WEEK || DATA.templates.length === 0) {
+    document.getElementById('empty').style.display = 'flex';
+    document.getElementById('grid').style.display = 'none';
+    return;
+  }
+  document.getElementById('empty').style.display = 'none';
+  document.getElementById('grid').style.display = 'grid';
+
+  // Header
+  document.getElementById('header-week').textContent = 'Week of ' + DATA.WEEK;
+  document.getElementById('header-count').textContent = DATA.templates.length + ' templates';
+
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+
+  DATA.templates.forEach((tpl, idx) => {
+    const t = parseTemplate(tpl.raw);
+    const savedHook  = getEdit(idx, 'hook', '');
+    const savedCapT  = getEdit(idx, 'capType', 'short');
+    const savedCapTx = getEdit(idx, 'capText', '');
+
+    const defaultCap = savedCapT === 'seo' ? t.captionSeo : t.captionShort;
+    const capDisplay = savedCapTx || defaultCap;
+
+    // Hook options HTML
+    const hookOptionsHtml = t.hooks.length ? `
+      <ul class="hook-list">
+        ${t.hooks.map((h, hi) => {
+          const uid = `hook-${idx}-${hi}`;
+          const isRec = h.rec;
+          const checked = savedHook ? (savedHook === h.text ? 'checked' : '') : (isRec ? 'checked' : (hi === 0 ? 'checked' : ''));
+          return `<li class="hook-item${isRec?' recommended':''}">
+            <label>
+              <input type="radio" name="hook-${idx}" value="${h.text.replace(/"/g,'&quot;')}" ${checked}
+                onchange="saveEdit(${idx},'hook',this.value)">
+              ${highlightBrackets(h.text)}
+              ${isRec ? '<span class="hook-rec-badge">Recommended</span>' : ''}
+            </label>
+          </li>`;
+        }).join('')}
+      </ul>
+      <div class="hook-custom-wrap">
+        <label>Write your own</label>
+        <input class="hook-custom-input" type="text" placeholder="Type a custom hook…"
+          value="${(!t.hooks.find(h=>h.text===savedHook)&&savedHook)?savedHook.replace(/"/g,'&quot;'):''}"
+          oninput="saveEdit(${idx},'hook',this.value)">
+      </div>` : '<p style="font-size:13px;color:var(--brown-light)">No hook variations provided.</p>';
+
+    // Slides HTML
+    const slidesHtml = t.slides.length ? `
+      <div class="slides-list">
+        ${t.slides.map(s=>`
+          <div class="slide-item">
+            <div class="slide-label">${s.label}</div>
+            <div class="slide-body">${highlightBrackets(s.body)}</div>
+          </div>`).join('')}
+      </div>` : '';
+
+    // Caption tabs
+    const capTabsHtml = t.captionSeo ? `
+      <div class="cap-tabs">
+        <button class="cap-tab${savedCapT==='short'?' active':''}" onclick="switchCap(${idx},'short',this)">Short</button>
+        <button class="cap-tab${savedCapT==='seo'?' active':''}" onclick="switchCap(${idx},'seo',this)">SEO</button>
+      </div>` : '';
+
+    const card = document.createElement('div');
+    card.className = 'tc';
+    card.innerHTML = `
+      <div class="tc-head">
+        <div class="tc-day">${t.day}${t.date ? ' &nbsp;·&nbsp; '+t.date : ''}</div>
+        <div class="tc-title">${highlightBrackets(t.topic || t.day)}</div>
+        <div class="tc-tags">
+          ${formatTag(t.format)}
+          ${t.contentType ? `<span class="tc-tag ctype">${t.contentType}</span>` : ''}
+        </div>
+      </div>
+
+      <div class="tc-section">
+        <div class="tc-section-head" onclick="toggleSection(this)">
+          <span>Creative Direction</span><span class="tc-chevron">▼</span>
+        </div>
+        <div class="tc-section-body">
+          <div class="tc-note">${highlightBrackets(t.note)}</div>
+        </div>
+      </div>
+
+      <div class="tc-section open">
+        <div class="tc-section-head" onclick="toggleSection(this)">
+          <span>Hook Line</span><span class="tc-chevron">▼</span>
+        </div>
+        <div class="tc-section-body">${hookOptionsHtml}</div>
+      </div>
+
+      ${t.slides.length ? `
+      <div class="tc-section">
+        <div class="tc-section-head" onclick="toggleSection(this)">
+          <span>Slides (${t.slides.length})</span><span class="tc-chevron">▼</span>
+        </div>
+        <div class="tc-section-body">${slidesHtml}</div>
+      </div>` : ''}
+
+      <div class="tc-section open">
+        <div class="tc-section-head" onclick="toggleSection(this)">
+          <span>Caption</span><span class="tc-chevron">▼</span>
+        </div>
+        <div class="tc-section-body">
+          ${capTabsHtml}
+          <textarea class="cap-textarea" id="cap-${idx}"
+            oninput="saveEdit(${idx},'capText',this.value)">${capDisplay}</textarea>
+        </div>
+      </div>
+
+      <div class="tc-footer">
+        <button class="notion-btn" id="notion-btn-${idx}" onclick="sendToNotion(${idx})">Send to Notion →</button>
+      </div>`;
+
+    grid.appendChild(card);
+  });
+}
+
+function toggleSection(head) {
+  head.closest('.tc-section').classList.toggle('open');
+}
+
+function switchCap(idx, type, btn) {
+  saveEdit(idx, 'capType', type);
+  btn.closest('.cap-tabs').querySelectorAll('.cap-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const t = parseTemplate(DATA.templates[idx].raw);
+  const current = getEdit(idx, 'capText', '');
+  if (!current) {
+    document.getElementById('cap-'+idx).value = type==='seo' ? t.captionSeo : t.captionShort;
+  }
+}
+
+function sendToNotion(idx) {
+  const t = parseTemplate(DATA.templates[idx].raw);
+  const edits = loadEdits();
+  const e = edits[idx] || {};
+  const hook = e.hook || (t.hooks.find(h=>h.rec)||t.hooks[0]||{}).text || '';
+  const capType = e.capType || 'short';
+  const capText = e.capText || (capType==='seo' ? t.captionSeo : t.captionShort);
+
+  const payload = {
+    topic: t.topic,
+    date: t.date,
+    format: t.format,
+    hook,
+    slides: t.slides.map(s=>s.label+'\n'+s.body).join('\n\n'),
+    caption: capText
+  };
+
+  // Copy to clipboard for manual paste into Notion (MCP send handled by Cowork)
+  const text = `TOPIC: ${payload.topic}\nDATE: ${payload.date}\nFORMAT: ${payload.format}\n\nHOOK:\n${payload.hook}\n\n${payload.slides ? 'SLIDES:\n'+payload.slides+'\n\n' : ''}CAPTION:\n${payload.caption}`;
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn = document.getElementById('notion-btn-'+idx);
+    btn.textContent = 'Copied ✓';
+    btn.classList.add('sent');
+    setTimeout(()=>{ btn.textContent='Send to Notion →'; btn.classList.remove('sent'); }, 2000);
+  });
+}
+</script>
+</body>
+</html>
