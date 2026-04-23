@@ -418,6 +418,49 @@
   .generate-btn.ready { opacity: 1; pointer-events: auto; box-shadow: 0 2px 8px rgba(184,134,11,0.35); }
   .generate-btn.ready:hover { background: var(--gold-hover); transform: translateY(-1px); }
 
+  /* ─── SCRIPTS TAB ───────────────────────────── */
+  .scripts-grid { display: flex; flex-direction: column; gap: 20px; max-width: 800px; }
+  .script-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .script-card-header {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--cream-dark);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .script-card-meta { flex: 1; }
+  .script-card-format { font-size: 13px; font-weight: 700; color: var(--text); }
+  .script-card-day { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .script-card-pick { font-size: 11px; font-weight: 600; color: var(--gold); margin-top: 2px; }
+  .script-status { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
+  .script-status.empty { background: var(--stone-light); color: var(--stone); }
+  .script-status.has-content { background: var(--green-light); color: var(--green); }
+  .script-textarea {
+    width: 100%; min-height: 180px; padding: 16px 18px;
+    font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--text);
+    background: var(--cream); border: none; resize: vertical; outline: none;
+    line-height: 1.65;
+  }
+  .script-textarea::placeholder { color: var(--text-muted); font-style: italic; }
+  .script-textarea:focus { background: #fffdf9; }
+  .scripts-footer {
+    margin-top: 8px; padding: 16px 0 0;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    border-top: 1px solid var(--cream-dark);
+  }
+  .scripts-footer-note { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+  .notion-btn {
+    flex-shrink: 0; padding: 11px 24px;
+    background: var(--navy); border: none; border-radius: var(--radius-sm);
+    color: #fff; font-size: 13px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s; white-space: nowrap;
+  }
+  .notion-btn:hover { background: var(--navy-mid); }
+  .notion-btn.sent { background: var(--green); }
+
   /* ─── MODAL ──────────────────────────────────── */
   .overlay {
     display: none; position: fixed; inset: 0;
@@ -498,12 +541,20 @@
 
 <div class="tabs-bar">
   <button class="tab-btn active" data-tab="this-week">This Week <span class="tab-count" id="count-week">0/6</span></button>
+  <button class="tab-btn" data-tab="scripts">Scripts <span class="tab-count" id="count-scripts">0/6</span></button>
   <button class="tab-btn" data-tab="saved">Saved for Later <span class="tab-count" id="count-saved">0</span></button>
 </div>
 
 <main class="main">
   <div class="tab-panel active" id="panel-this-week">
     <div class="slots-grid" id="slotsGrid"></div>
+  </div>
+  <div class="tab-panel" id="panel-scripts">
+    <div class="scripts-grid" id="scriptsGrid"></div>
+    <div class="scripts-footer">
+      <div class="scripts-footer-note">Edit any script above, then send all 6 to Notion when you're ready.</div>
+      <button class="notion-btn" id="notionBtn">Send to Notion →</button>
+    </div>
   </div>
   <div class="tab-panel" id="panel-saved">
     <div class="saved-grid" id="savedGrid"></div>
@@ -644,29 +695,41 @@ const SLOTS = [
   },
   {
     id: 6, day: "Sunday", dayShort: "SUN", date: "May 3",
-    format: "B-Roll Lifestyle Reel", pillar: "World/Perspective — always B-roll",
+    format: "Simple Educational Carousel", pillar: "Quick-hit tactical — immediately usable",
     ideas: [
-      { letter:"A", title:'"That Restaurant Your Ideal Client Goes to on Saturday Night? Know Its Name."',
-        angle:"Becoming a scholar of your market means knowing the lifestyle your ideal clients live, not just the inventory. B-roll of an elevated local setting with overlays teaching the principle.",
-        hookType:"Pattern 2 — Reframe (Beat 1 as question)", hookLine:"Beat 1: 'That restaurant your ideal client goes to on a Saturday night?' → Beat 2: 'You should know its name. You should have been there. This is market research.'",
-        source:"Soundbite Library §8 ('Become a scholar of the lifestyle side' · 'this is market research') · Feedback Log Apr 23",
-        bestFor:"B-roll, 15–25s. Film at elevated local restaurant, waterfront, or lifestyle setting." },
-      { letter:"B", title:'"What Does Your Ideal Client\'s Perfect Saturday Look Like?"',
-        angle:"The story of the agent whose ideal client wanted to go to the marina and have a glass of wine — and how that insight changed everything she filmed. B-roll that shows the aspirational life and teaches agents to mirror their ideal client's Saturday.",
-        hookType:"Beat 1 Question — Client Mirror", hookLine:'"What does your ideal client\'s perfect Saturday actually look like?" [Footage: marina, elevated restaurant, waterfront]',
-        source:"Soundbite Library §4 ('I asked her, what\'s their perfect Saturday? She said, marina, glass of wine...') · §8 (Gabrielle's date night restaurant content)",
-        bestFor:"B-roll, 15–20s. Film at a beautiful lifestyle location." },
-      { letter:"C", title:'"They\'re Not Buying the Countertop" — Luxury Listing B-roll',
-        angle:"When Amber walks through a listing, she's thinking about the life the buyer will live there — not specs. Slow B-roll inside a luxury listing with overlays teaching: agents who describe homes get listings. Agents who describe the life get luxury listings.",
-        hookType:"Callout / Identity Statement", hookLine:'"Real estate agents describe homes. The ones who get luxury listings? They describe the life."',
-        source:"Soundbite Library §7 · §9 (aspirational content) · Content Strategy Tier 1 settings",
-        bestFor:"B-roll, 15–25s. Requires access to a luxury listing — footage quality earns the positioning." }
+      { letter:"A", title:"5 Instagram Story Ideas for Agents This Week",
+        angle:"Most agents either post nothing to stories or post things that don't move people — house tours, listing announcements, generic motivation. This carousel gives five specific story prompts agents can use this week: each one maps to a content goal (connection, education, proof, CTA, personality) with an example of what to say.",
+        hookType:"Callout + Promise", hookLine:'"Your stories are doing nothing for you. Here are 5 that actually will."',
+        source:"Content Strategy (Five Pillars) · Soundbite Library §6 · Caption Library",
+        bestFor:"Carousel, 6 slides (intro + one per story prompt). Extremely high save + share rate. Agents screenshot and come back to this weekly." },
+      { letter:"B", title:"Skip This, Try This: Agent Edition",
+        angle:"Side-by-side format, one swap per slide. Each 'skip' is something most agents actually do; each 'try' is the version that builds trust and converts. Examples: Skip just-listed graphic → Try lifestyle listing spotlight. Skip motivational quote → Try a POV that positions you as the expert. Skip 'DM me for info' → Try 'Comment SOLD for my free guide.'",
+        hookType:"Negation / Contrast", hookLine:'"Most agents are doing version one. Here\'s version two."',
+        source:"Soundbite Library §6 · §7 · Hook Library §1 · Caption Library (CTA patterns)",
+        bestFor:"Carousel, 6–8 slides. Each slide is one swap. Easy to read fast — high share rate. Very low barrier for agents to immediately apply." },
+      { letter:"C", title:"5 Caption Formulas That Actually Get Replies",
+        angle:"Most agent captions are either a wall of text or a one-liner that says nothing. This carousel breaks down five caption structures agents can plug-and-play: the open loop, the story-turn, the callout-and-reframe, the mini case study, and the direct CTA. One formula per slide with a real example.",
+        hookType:"Callout + List Promise", hookLine:'"Your caption is why people scroll past. Here are 5 formulas that make them stop."',
+        source:"Caption Library · Soundbite Library §4 · Content Strategy Pillar 3",
+        bestFor:"Carousel, 6 slides (intro + five formulas). Agents save this and return to it. Works for any niche." }
     ]
   }
 ];
 
+// ─── SCRIPTS (Claude fills these in after generating) ──
+// To update: replace the empty strings with the generated script text
+const SCRIPTS = {
+  1: "",
+  2: "",
+  3: "",
+  4: "",
+  5: "",
+  6: ""
+};
+
 // ─── STATE (localStorage persists across sessions) ─────
 const STORAGE_KEY = `atk-idea-bank-${WEEK}`;
+const SCRIPTS_KEY = `atk-scripts-${WEEK}`;
 let state = {};
 try { state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch(e) { state = {}; }
 // state[slotId][letter] = 'pick' | 'save' | 'reject' | null
@@ -882,6 +945,84 @@ function updateCounts() {
   document.getElementById('count-saved').textContent = getSavedIdeas().length;
 }
 
+// ─── SCRIPTS TAB ───────────────────────────────────────
+function getScriptEdits() {
+  try { return JSON.parse(localStorage.getItem(SCRIPTS_KEY) || '{}'); } catch(e) { return {}; }
+}
+function saveScriptEdit(slotId, text) {
+  const edits = getScriptEdits();
+  edits[slotId] = text;
+  try { localStorage.setItem(SCRIPTS_KEY, JSON.stringify(edits)); } catch(e) {}
+}
+function getScriptText(slotId) {
+  const edits = getScriptEdits();
+  // localStorage edits take priority over baked-in SCRIPTS
+  if (edits[slotId] !== undefined) return edits[slotId];
+  return SCRIPTS[slotId] || '';
+}
+
+function renderScripts() {
+  const grid = document.getElementById('scriptsGrid');
+  const edits = getScriptEdits();
+  let filledCount = 0;
+  grid.innerHTML = '';
+  SLOTS.forEach(slot => {
+    const pickedLetter = getPickedLetter(slot.id);
+    const pickedIdea = pickedLetter ? slot.ideas.find(i => i.letter === pickedLetter) : null;
+    const text = getScriptText(slot.id);
+    const hasContent = text.trim().length > 0;
+    if (hasContent) filledCount++;
+    const card = document.createElement('div');
+    card.className = 'script-card';
+    card.innerHTML = `
+      <div class="script-card-header">
+        <div class="day-block">
+          <span class="day-short">${slot.dayShort}</span>
+          <span class="day-date">${slot.date}</span>
+        </div>
+        <div class="script-card-meta">
+          <div class="script-card-format">${slot.format}</div>
+          ${pickedIdea ? `<div class="script-card-pick">→ ${pickedIdea.title}</div>` : '<div class="script-card-day">No idea picked yet</div>'}
+        </div>
+        <span class="script-status ${hasContent ? 'has-content' : 'empty'}">${hasContent ? '✓ Ready' : 'Awaiting script'}</span>
+      </div>
+      <textarea class="script-textarea" data-slot="${slot.id}" placeholder="Paste Claude's script here, or it will auto-populate after you generate…">${text}</textarea>
+    `;
+    grid.appendChild(card);
+  });
+  // attach save-on-type
+  grid.querySelectorAll('.script-textarea').forEach(ta => {
+    ta.addEventListener('input', () => {
+      saveScriptEdit(parseInt(ta.dataset.slot), ta.value);
+      updateScriptCount();
+    });
+  });
+  document.getElementById('count-scripts').textContent = `${filledCount}/6`;
+}
+
+function updateScriptCount() {
+  let count = 0;
+  SLOTS.forEach(s => { if (getScriptText(s.id).trim()) count++; });
+  document.getElementById('count-scripts').textContent = `${count}/6`;
+}
+
+// ─── NOTION BUTTON ─────────────────────────────────────
+document.getElementById('notionBtn').addEventListener('click', () => {
+  const lines = SLOTS.map(slot => {
+    const pickedLetter = getPickedLetter(slot.id);
+    const pickedIdea = pickedLetter ? slot.ideas.find(i => i.letter === pickedLetter) : null;
+    const scriptText = getScriptText(slot.id).trim();
+    return `--- ${slot.day} ${slot.date}: ${slot.format} ---\nIdea: ${pickedIdea ? pickedIdea.title : 'Not selected'}\n\n${scriptText || '[No script yet]'}`;
+  }).join('\n\n');
+  const prompt = `Here are this week's 6 approved scripts. Please create a Notion entry for each one in the ATK Instagram Calendar — one page per script, with the day, format, and script body.\n\n${lines}`;
+  navigator.clipboard.writeText(prompt).then(() => {
+    const btn = document.getElementById('notionBtn');
+    btn.textContent = '✓ Copied — paste into chat';
+    btn.classList.add('sent');
+    setTimeout(() => { btn.textContent = 'Send to Notion →'; btn.classList.remove('sent'); }, 3000);
+  });
+});
+
 // ─── TABS ──────────────────────────────────────────────
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -889,6 +1030,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById(`panel-${btn.dataset.tab}`).classList.add('active');
+    if (btn.dataset.tab === 'scripts') renderScripts();
   });
 });
 
@@ -929,6 +1071,7 @@ document.getElementById('copyBtn').addEventListener('click', () => {
 
 // ─── INIT ──────────────────────────────────────────────
 renderThisWeek();
+updateScriptCount();
 </script>
 
 </div><!-- /app -->
