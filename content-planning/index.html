@@ -1049,8 +1049,27 @@ document.getElementById('generateBtn').addEventListener('click', () => {
       <div class="selection-meta">${slot.format} · Idea ${letter}</div>
     </div>`;
   }).join('');
+  const skillMap = {
+    1: 'agent-toolkit-content:carousel-post-copywriter',
+    2: 'agent-toolkit-content:reel-script-copywriter',
+    3: null, // determined by bestFor
+    4: null,
+    5: null,
+    6: 'agent-toolkit-content:carousel-post-copywriter'
+  };
+  const promptLines = SLOTS.map(slot => {
+    const letter = getPickedLetter(slot.id);
+    const idea = slot.ideas.find(i => i.letter === letter);
+    const isCarousel = idea.bestFor.toLowerCase().includes('carousel');
+    const skill = skillMap[slot.id] !== null
+      ? skillMap[slot.id]
+      : (isCarousel ? 'agent-toolkit-content:carousel-post-copywriter' : 'agent-toolkit-content:reel-script-copywriter');
+    // Sunday b-roll check
+    const finalSkill = slot.format.toLowerCase().includes('b-roll') ? 'agent-toolkit-content:broll-reel-copywriter' : skill;
+    return `${slot.day} ${slot.date} — ${slot.format}\nTitle: ${idea.title}\nAngle: ${idea.angle}\nHook: ${idea.hookLine}\nSkill to invoke: ${finalSkill}`;
+  });
   document.getElementById('copyText').textContent =
-    `Here are my picks for this week's content:\n\n${lines.join('\n')}\n\nPlease generate all 6 pieces now.`;
+    `Please generate this week's 6 content pieces in order. For each slot, formally invoke the skill listed — do not skip the skill call.\n\n${promptLines.join('\n\n')}`;
   document.getElementById('overlay').classList.add('open');
 });
 
