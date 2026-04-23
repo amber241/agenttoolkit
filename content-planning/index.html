@@ -994,8 +994,14 @@ function parseScript(md) {
   if (hookSec) {
     const opts = [];
     hookSec[1].split('\n').forEach(line => {
-      const m = line.match(/^\d+\.\s+\*\*(.+?)\*\*/);
-      if (m) opts.push({ text: m[1].replace(/ ← RECOMMENDED.*/,'').trim(), rec: line.includes('← RECOMMENDED') });
+      // bold option: 1. **text** ← RECOMMENDED  OR  plain option: 2. Some text
+      let m = line.match(/^\d+\.\s+\*\*(.+?)\*\*/);
+      if (m) {
+        opts.push({ text: m[1].replace(/ ← RECOMMENDED.*/,'').trim(), rec: line.includes('← RECOMMENDED') });
+      } else {
+        m = line.match(/^\d+\.\s+(.+)/);
+        if (m) opts.push({ text: m[1].replace(/ ← RECOMMENDED.*/,'').trim(), rec: line.includes('← RECOMMENDED') });
+      }
     });
     r.hookOptions = opts;
     const rec = opts.find(o=>o.rec) || opts[0];
