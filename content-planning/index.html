@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Toolkit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    color-scheme: light;
+    --cream: #fefaf7;
+    --cream-mid: #f5ede4;
+    --cream-dark: #e8ddd4;
+    --navy: #6e5645;
+    --navy-mid: #5a4538;
+    --navy-light: #7d6454;
+    --gold: #bfbd8f;
+    --gold-hover: #a8a676;
+    --gold-light: #f5f4e8;
+    --gold-border: #bfbd8f;
+    --stone: #a0907f;
+    --stone-light: #ede8e2;
+    --green: #5a7a52;
+    --green-light: #e8f0e6;
+    --red: #9e3d2e;
+    --red-light: #faecea;
+    --blue: #5a6e8a;
+    --blue-light: #e8eef5;
+    --white: #FFFFFF;
+    --text: #6e5645;
+    --text-muted: #a0907f;
+    --radius-sm: 8px;
+    --radius: 12px;
+    --radius-lg: 16px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.07);
+    --shadow: 0 2px 8px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.06);
+    --shadow-lg: 0 8px 24px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.06);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', -apple-system, 'Helvetica Neue', Arial, sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ─── PASSWORD GATE ──────────────────────────── */
+  #gate {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #fefaf7;
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+  #gate.visible { display: flex; }
+  #app.hidden { display: none; }
+
+  .gate-card {
+    width: 100%;
+    max-width: 380px;
+    padding: 48px 40px 40px;
+    text-align: center;
+  }
+  .gate-eyebrow {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #bfbd8f;
+    margin-bottom: 10px;
+  }
+  .gate-title {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 32px;
+    font-weight: 400;
+    color: #6e5645;
+    line-height: 1.15;
+    margin-bottom: 32px;
+  }
+  .gate-input-wrap { position: relative; margin-bottom: 12px; }
+  .gate-input {
+    width: 100%;
+    padding: 13px 44px 13px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: #6e5645;
+    background: #fff;
+    border: 1.5px solid #e8ddd4;
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.15s;
+    letter-spacing: 2px;
+  }
+  .gate-input:focus { border-color: #bfbd8f; }
+  .gate-input.error { border-color: #c0392b; }
+  .gate-toggle {
+    position: absolute;
+    right: 14px; top: 50%;
+    transform: translateY(-50%);
+    background: none; border: none;
+    cursor: pointer; color: #a0907f;
+    font-size: 14px; padding: 2px;
+  }
+  .gate-btn {
+    width: 100%;
+    padding: 13px;
+    background: #6e5645;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    transition: background 0.15s;
+    margin-bottom: 12px;
+  }
+  .gate-btn:hover { background: #5a4538; }
+  .gate-error {
+    font-size: 12px;
+    color: #c0392b;
+    margin-top: 4px;
+    min-height: 18px;
+    font-weight: 500;
+  }
+  .gate-divider {
+    width: 40px;
+    height: 1px;
+    background: #e8ddd4;
+    margin: 28px auto;
+  }
+
+  /* ─── TOPBAR ─────────────────────────────────── */
+  .topbar {
+    background: #6e5645;
+    padding: 0 40px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 200;
+  }
+  .topbar-brand { display: flex; align-items: center; gap: 12px; }
+  .topbar-logo { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #fff; }
+  .topbar-divider { width: 1px; height: 16px; background: rgba(255,255,255,0.2); }
+  .topbar-title { font-size: 13px; color: rgba(255,255,255,0.55); font-weight: 500; }
+  .topbar-right { display: flex; align-items: center; gap: 14px; }
+  .filming-badge { font-size: 11px; color: rgba(255,255,255,0.4); }
+  .picks-pill {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.65);
+    transition: all 0.2s;
+  }
+  .picks-pill.complete { background: var(--gold-light); border-color: var(--gold-border); color: var(--navy); }
+
+  /* ─── PAGE HEADER ────────────────────────────── */
+  .page-header { background: var(--white); border-bottom: 1px solid var(--cream-dark); padding: 28px 40px 24px; }
+  .week-label { font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+  .page-title { font-family: 'Instrument Serif', Georgia, serif; font-size: 36px; font-weight: 400; color: var(--navy); letter-spacing: 0.1px; line-height: 1.1; margin-bottom: 8px; }
+  .page-subtitle { font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+  .page-subtitle strong { color: var(--text); font-weight: 600; }
+
+  /* ─── TABS ───────────────────────────────────── */
+  .tabs-bar {
+    background: var(--white);
+    border-bottom: 1px solid var(--cream-dark);
+    padding: 0 40px;
+    display: flex;
+    gap: 0;
+  }
+  .tab-btn {
+    padding: 12px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { color: var(--navy); border-bottom-color: var(--navy); }
+  .tab-count {
+    background: var(--stone-light);
+    color: var(--stone);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 10px;
+    min-width: 18px;
+    text-align: center;
+  }
+  .tab-btn.active .tab-count { background: var(--navy); color: #fff; }
+
+  /* ─── MAIN ───────────────────────────────────── */
+  .main { max-width: 1200px; margin: 0 auto; padding: 32px 40px 120px; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ─── GRID ───────────────────────────────────── */
+  .slots-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  @media (max-width: 960px) { .slots-grid { grid-template-columns: repeat(2, 1fr); } .main { padding: 24px 20px 120px; } .topbar, .page-header, .tabs-bar { padding-left: 20px; padding-right: 20px; } }
+  @media (max-width: 600px) { .slots-grid { grid-template-columns: 1fr; } }
+
+  /* ─── SLOT CARD ──────────────────────────────── */
+  .slot-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.2s;
+  }
+  .slot-card:hover { box-shadow: var(--shadow-lg); }
+  .slot-card.has-pick { box-shadow: var(--shadow), 0 0 0 2px var(--gold-border); }
+
+  .slot-header {
+    padding: 16px 18px 14px;
+    border-bottom: 1px solid var(--cream-dark);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .day-block {
+    flex-shrink: 0;
+    text-align: center;
+    background: #bfbd8f;
+    border-radius: var(--radius-sm);
+    padding: 6px 10px;
+    min-width: 52px;
+  }
+  .day-short { font-size: 9px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.75); display: block; }
+  .day-date { font-size: 13px; font-weight: 700; color: #fff; display: block; margin-top: 1px; white-space: nowrap; }
+  .slot-meta { flex: 1; min-width: 0; }
+  .slot-format { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.3; margin-bottom: 3px; }
+  .slot-pillar { font-family: 'DM Sans', sans-serif; font-size: 11px; color: var(--text-muted); }
+  .slot-pick-badge {
+    display: none;
+    font-size: 10px; font-weight: 700;
+    background: var(--gold-light); color: var(--gold);
+    border: 1px solid var(--gold-border);
+    padding: 2px 8px; border-radius: 20px;
+    white-space: nowrap; align-self: flex-start; margin-top: 2px;
+  }
+  .slot-card.has-pick .slot-pick-badge { display: block; }
+
+  /* ─── IDEA ROW ───────────────────────────────── */
+  .ideas-list { flex: 1; }
+  .idea-row {
+    border-bottom: 1px solid var(--cream-mid);
+    cursor: pointer;
+    transition: background 0.12s;
+  }
+  .idea-row:last-child { border-bottom: none; }
+  .idea-row:hover { background: var(--cream); }
+  .idea-row.state-pick { background: var(--gold-light); }
+  .idea-row.state-save { background: var(--blue-light); }
+  .idea-row.state-reject { opacity: 0.5; }
+
+  .idea-title-bar {
+    display: flex; align-items: center;
+    padding: 12px 16px; gap: 10px;
+    user-select: none;
+  }
+  .idea-badge {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--stone-light); color: var(--stone);
+    font-size: 10px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: all 0.15s;
+  }
+  .idea-row.state-pick .idea-badge { background: var(--gold); color: #fff; }
+  .idea-row.state-save .idea-badge { background: var(--blue); color: #fff; }
+  .idea-row.state-reject .idea-badge { background: var(--stone-light); color: var(--stone); text-decoration: line-through; }
+
+  .idea-name {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 600; color: var(--text);
+    flex: 1; line-height: 1.4; transition: color 0.15s;
+  }
+  .idea-row.state-pick .idea-name { color: var(--gold-hover); }
+  .idea-row.state-save .idea-name { color: var(--blue); }
+  .idea-row.state-reject .idea-name { text-decoration: line-through; color: var(--text-muted); }
+
+  .idea-status-icon { font-size: 13px; flex-shrink: 0; }
+  .chevron-icon {
+    width: 14px; height: 14px; flex-shrink: 0;
+    opacity: 0.3; transition: transform 0.2s, opacity 0.2s;
+  }
+  .idea-row.open .chevron-icon { transform: rotate(180deg); opacity: 0.6; }
+
+  /* ─── EXPANDED DETAIL ────────────────────────── */
+  .idea-detail {
+    display: none;
+    padding: 0 16px 16px 48px;
+    background: var(--cream);
+    border-top: 1px solid var(--cream-dark);
+  }
+  .idea-row.open > .idea-detail { display: block; }
+  .idea-row.state-pick > .idea-detail { background: var(--gold-light); }
+  .idea-row.state-save > .idea-detail { background: var(--blue-light); }
+
+  .detail-section { margin-top: 11px; }
+  .detail-label { font-size: 9px; font-weight: 800; letter-spacing: 1.3px; text-transform: uppercase; color: var(--stone); margin-bottom: 3px; }
+  .detail-body { font-size: 12px; color: var(--navy-light); line-height: 1.55; }
+  .detail-quote {
+    margin-top: 5px; padding: 7px 10px;
+    background: rgba(255,255,255,0.7);
+    border-left: 2.5px solid var(--gold-border);
+    border-radius: 0 4px 4px 0;
+    font-size: 12px; font-style: italic; color: var(--navy-light); line-height: 1.5;
+  }
+  .detail-tag {
+    display: inline-block; background: var(--stone-light); color: var(--stone);
+    font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 20px; margin-top: 4px;
+  }
+
+  /* ─── ACTION BUTTONS ─────────────────────────── */
+  .action-buttons {
+    display: flex; gap: 8px; margin-top: 14px;
+  }
+  .action-btn {
+    flex: 1; padding: 8px 4px;
+    border-radius: var(--radius-sm);
+    font-size: 11px; font-weight: 700;
+    cursor: pointer; transition: all 0.15s;
+    border: 1.5px solid transparent;
+    text-align: center;
+    letter-spacing: 0.1px;
+  }
+  .action-btn.pick-btn {
+    background: transparent; border-color: var(--gold);
+    color: var(--gold);
+  }
+  .action-btn.pick-btn:hover, .action-btn.pick-btn.active {
+    background: var(--gold); color: #fff;
+  }
+  .action-btn.save-btn {
+    background: transparent; border-color: var(--blue);
+    color: var(--blue);
+  }
+  .action-btn.save-btn:hover, .action-btn.save-btn.active {
+    background: var(--blue); color: #fff;
+  }
+  .action-btn.reject-btn {
+    background: transparent; border-color: var(--stone);
+    color: var(--stone);
+  }
+  .action-btn.reject-btn:hover, .action-btn.reject-btn.active {
+    background: var(--stone-light); color: var(--red); border-color: var(--red);
+  }
+
+  /* ─── SAVED IDEAS TAB ────────────────────────── */
+  .saved-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+  .saved-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    padding: 16px 18px;
+    border-left: 3px solid var(--blue);
+  }
+  .saved-card-slot { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--stone); margin-bottom: 5px; }
+  .saved-card-title { font-size: 13px; font-weight: 700; color: var(--navy); line-height: 1.35; margin-bottom: 6px; }
+  .saved-card-angle { font-size: 11px; color: var(--text-muted); line-height: 1.5; }
+  .saved-card-actions { margin-top: 10px; display: flex; gap: 8px; }
+  .mini-btn {
+    font-size: 11px; font-weight: 600; padding: 5px 12px;
+    border-radius: 6px; border: 1.5px solid; cursor: pointer; transition: all 0.15s;
+  }
+  .mini-btn.pick { border-color: var(--gold); color: var(--gold); background: transparent; }
+  .mini-btn.pick:hover { background: var(--gold); color: #fff; }
+  .mini-btn.remove { border-color: var(--stone); color: var(--stone); background: transparent; }
+  .mini-btn.remove:hover { background: var(--stone-light); }
+
+  .empty-state { text-align: center; padding: 60px 24px; color: var(--text-muted); }
+  .empty-state-icon { font-size: 32px; margin-bottom: 12px; }
+  .empty-state-text { font-size: 13px; line-height: 1.6; }
+
+  /* ─── BOTTOM BAR ─────────────────────────────── */
+  .bottom-bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: #5a4538;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 14px 40px;
+    z-index: 300; display: flex; align-items: center; gap: 20px;
+  }
+  .bottom-chips { display: flex; flex-wrap: wrap; gap: 6px; flex: 1; }
+  .chip {
+    font-size: 10px; font-weight: 600; padding: 4px 10px; border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.35); white-space: nowrap; transition: all 0.15s;
+  }
+  .chip.filled { background: var(--gold-light); border-color: var(--gold-border); color: var(--navy); }
+  .generate-btn {
+    flex-shrink: 0; padding: 11px 24px;
+    background: var(--gold); border: none; border-radius: var(--radius-sm);
+    color: var(--navy); font-size: 13px; font-weight: 800; letter-spacing: 0.3px;
+    cursor: pointer; opacity: 0.35; pointer-events: none; transition: all 0.2s; white-space: nowrap;
+  }
+  .generate-btn.ready { opacity: 1; pointer-events: auto; box-shadow: 0 2px 8px rgba(184,134,11,0.35); }
+  .generate-btn.ready:hover { background: var(--gold-hover); transform: translateY(-1px); }
+
+  /* ─── MODAL ──────────────────────────────────── */
+  .overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.5); z-index: 400;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .overlay.open { display: flex; }
+  .modal {
+    background: var(--white); border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg); max-width: 560px; width: 100%; max-height: 82vh; overflow-y: auto;
+  }
+  .modal-header {
+    padding: 20px 24px 16px; border-bottom: 1px solid var(--cream-dark);
+    display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: var(--white);
+  }
+  .modal-header h2 { font-family: 'Instrument Serif', Georgia, serif; font-size: 24px; font-weight: 400; color: var(--navy); letter-spacing: 0.2px; }
+  .close-btn {
+    width: 28px; height: 28px; border-radius: 50%; background: var(--stone-light);
+    border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-size: 14px; color: var(--stone); line-height: 1;
+  }
+  .close-btn:hover { background: var(--cream-dark); }
+  .modal-body { padding: 16px 24px; }
+  .selection-item { padding: 12px 0; border-bottom: 1px solid var(--cream-mid); }
+  .selection-item:last-child { border-bottom: none; }
+  .selection-day { font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--stone); margin-bottom: 3px; }
+  .selection-title { font-size: 13px; font-weight: 700; color: var(--navy); line-height: 1.3; }
+  .selection-meta { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .copy-block { margin: 16px 0; background: var(--cream); border-radius: var(--radius-sm); padding: 14px; }
+  .copy-label { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--stone); margin-bottom: 8px; }
+  .copy-text { font-size: 11px; color: var(--navy-light); line-height: 1.7; white-space: pre-wrap; font-family: 'Courier New', monospace; }
+  .copy-btn {
+    margin-top: 10px; width: 100%; padding: 9px;
+    background: var(--navy); color: #fff; border: none; border-radius: var(--radius-sm);
+    font-size: 12px; font-weight: 700; cursor: pointer; transition: background 0.15s;
+  }
+  .copy-btn:hover { background: var(--navy-light); }
+  .copy-btn.copied { background: var(--green); }
+  .modal-footer { padding: 12px 24px 20px; font-size: 11px; color: var(--text-muted); line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="gate">
+  <div class="gate-card">
+    <div class="gate-eyebrow">The Agent Toolkit</div>
+    <div class="gate-title">Content Planning</div>
+    <div class="gate-input-wrap">
+      <input class="gate-input" id="gateInput" type="password" placeholder="Password" autocomplete="current-password" />
+      <button class="gate-toggle" id="gateToggle" tabindex="-1">👁</button>
+    </div>
+    <div class="gate-error" id="gateError"></div>
+    <div class="gate-divider"></div>
+    <button class="gate-btn" id="gateBtn">Enter →</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" class="hidden">
+<nav class="topbar">
+  <div class="topbar-brand">
+    <span class="topbar-logo">Agent Toolkit</span>
+    <div class="topbar-divider"></div>
+    <span class="topbar-title">Weekly Content Ideas</span>
+  </div>
+  <div class="topbar-right">
+    <span class="filming-badge">📹 Filming: Fri Apr 25</span>
+    <span class="picks-pill" id="picksPill">0 of 6 picked</span>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="week-label">Week of April 28 – May 3, 2026</div>
+  <h1 class="page-title">This Week's Content Ideas</h1>
+  <p class="page-subtitle"><strong>2–3 ideas per slot.</strong> Click any idea to read the full angle, hook, and source — then pick it for this week, save it for later, or reject it.</p>
+</div>
+
+<div class="tabs-bar">
+  <button class="tab-btn active" data-tab="this-week">This Week <span class="tab-count" id="count-week">0/6</span></button>
+  <button class="tab-btn" data-tab="saved">Saved for Later <span class="tab-count" id="count-saved">0</span></button>
+</div>
+
+<main class="main">
+  <div class="tab-panel active" id="panel-this-week">
+    <div class="slots-grid" id="slotsGrid"></div>
+  </div>
+  <div class="tab-panel" id="panel-saved">
+    <div class="saved-grid" id="savedGrid"></div>
+  </div>
+</main>
+
+<div class="bottom-bar">
+  <div class="bottom-chips" id="bottomChips"></div>
+  <button class="generate-btn" id="generateBtn">Review My Picks →</button>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Your 6 Picks</h2>
+      <button class="close-btn" id="closeModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="selectionsList"></div>
+      <div class="copy-block">
+        <div class="copy-label">Copy into Cowork to generate scripts</div>
+        <div class="copy-text" id="copyText"></div>
+        <button class="copy-btn" id="copyBtn">Copy to Clipboard</button>
+      </div>
+    </div>
+    <div class="modal-footer">Paste this into your Cowork session and say <strong>"generate my content"</strong> — the copywriters will write all 6 pieces.</div>
+  </div>
+</div>
+
+<script>
+const WEEK = "2026-04-28";
+
+const SLOTS = [
+  {
+    id: 1, day: "Monday", dayShort: "MON", date: "Apr 28",
+    format: "Educational Carousel", pillar: "Deep tactical — save-worthy",
+    ideas: [
+      { letter:"A", title:"The 4 Types of Content Every Agent Needs in Their Feed",
+        angle:"Most agents post one or two content types and wonder why nothing converts. There are four types every profile needs to move a stranger to a client: reach, nurture, proof, and conversion. Most agents are missing at least two. This carousel shows what each does and how often to post it.",
+        hookType:"Callout Diagnosis", hookLine:'"Most agents are either posting listings only, or tips and getting nothing back. Neither one alone converts."',
+        source:"Content Strategy (Five Pillars) · Soundbite Library §6 · Hook Library §4",
+        bestFor:"Carousel, 6–8 slides. Every agent can immediately audit their own feed — high save rate." },
+      { letter:"B", title:"The Instagram Listing That Actually Gets Sellers to Call",
+        angle:"Most agents post a just-listed graphic. The agents who convert sellers from Instagram post something different: a listing spotlight that teaches what their home would feel like to someone who loves it. Specific framework for what to film, what overlay to write, and how to caption it.",
+        hookType:"Negation Open", hookLine:'"Stop treating Instagram like it\'s the MLS."',
+        source:"Soundbite Library §7 · Style Spec §8.1 (Gabrielle listing spotlight) · Hook Library §1",
+        bestFor:"Carousel, 6–8 slides. Can include Gabrielle's documented listing spotlight as the proof slide." },
+      { letter:"C", title:"What to Post on Instagram When You Have Zero Listings Right Now",
+        angle:"The trap most agents fall into: waiting for a listing to post something 'real.' The agents who grow consistently post the same five content types whether they have zero listings or five. This carousel is the playbook for staying visible between transactions.",
+        hookType:"Aspirational / Objection Flip", hookLine:'"Waiting for a listing to post? That\'s the thing keeping your page invisible."',
+        source:"Soundbite Library §6 · Content Strategy Pillar 2 · Hook Library §4",
+        bestFor:"Carousel, 5–7 slides. Highly relatable — most agents go dark between deals." }
+    ]
+  },
+  {
+    id: 2, day: "Tuesday", dayShort: "TUE", date: "Apr 29",
+    format: "Talking Head Reel", pillar: "Flexible — best topic for the week",
+    ideas: [
+      { letter:"A", title:'"We\'re Not ER Doctors" — The Availability Reel',
+        angle:"Your value proposition should not be that you are the most available. Real estate is not an emergency room. When you build a business where clients expect instant access 24/7, you've built a business that will eventually break you. The agents charging full fee and keeping their weekends stopped competing on availability.",
+        hookType:"Contrarian Reframe (Negation)", hookLine:'"We\'re not ER doctors." (verbatim — Hook Library §8)',
+        source:"Soundbite Library §2 · Hook Library §8",
+        bestFor:"Talking head, 30–40s. Timely: contrast to 'resilience/grind' content circulating this week." },
+      { letter:"B", title:'"What Would Million Dollar Amber Do?" — The Decision Filter',
+        angle:"The most useful question you've ever asked yourself. You named your future self, asked what she'd do when the alarm went off, and built a 7-figure business that way. You told your husband. He named three things that had to die. This reel teaches the mechanic.",
+        hookType:"First-Person Confession", hookLine:'"I started calling myself Million Dollar Amber. My husband told me three things about myself had to die."',
+        source:"Soundbite Library §5 · Hook Library §2",
+        bestFor:"Talking head, 45–60s. Broad reach — anyone building a business relates, not just agents." },
+      { letter:"C", title:'"The Main Character of Your Social Media Is Not You"',
+        angle:"Most agents center their Instagram on themselves — achievements, closings, their face. The agents who attract ideal clients make their content about the viewer's life, not the agent's. This reel delivers the reframe and shows what it looks like in practice.",
+        hookType:"Contrarian Reframe", hookLine:'"The main character of your social media should not be you. It should be your ideal client." (verbatim)',
+        source:"Soundbite Library §4 · Hook Library §1",
+        bestFor:"Talking head, 45–60s. Strong POV that applies across all niches and markets." }
+    ]
+  },
+  {
+    id: 3, day: "Wednesday", dayShort: "WED", date: "Apr 30",
+    format: "Proof Reel or Carousel", pillar: "Member result or case study",
+    ideas: [
+      { letter:"A", title:"Gabrielle — She Doesn't Work Saturdays. Charges 4%. Did $40M Last Year.",
+        angle:"The three most common objections to running a business differently — you have to be available, you have to discount, you have to grind for volume — Gabrielle disproves all three in one story. DC suburbs. Burnout → #2 in her office. All from Instagram.",
+        hookType:"Character + Number / Contrarian Reframe", hookLine:'"Most agents are taught to chase leads, compete on commission, and stay available 24/7. Gabrielle decided that didn\'t work for her."',
+        source:"Style Spec §8.1 (Gabrielle full case study) · Soundbite Library §11 · Hook Library §4",
+        bestFor:"Talking head reel, 30–45s. Or Conversational Question Open if a Collective call clip of Gabrielle exists." },
+      { letter:"B", title:"Adrienne — From $3M to $20–30M in One Year. All From Instagram.",
+        angle:"In 2024, Adrienne did $3M — one deal — in Dallas. In 2025, $20–30M in leads, contracts, and closed deals. All from Instagram. She stopped trying to be the agent for everyone and became known for one specific client type.",
+        hookType:"Stat-Shock Open", hookLine:'"In one year, Adrienne went from $3M in deals to $20–30M. All from Instagram."',
+        source:"Style Spec §8.1 (Adrienne: Dallas, $3M→$20-30M) · Hook Library §3",
+        bestFor:"Short punchy reel OR before/after carousel with year-over-year contrast as the spine." },
+      { letter:"C", title:"Allison — $3.1M in One Month After One Sentence Change",
+        angle:"Allison stopped targeting relocators to Florida and started targeting people who already moved there 4–5 years ago. That one tweak. In the month after the Intensive Cohort: three deals, $3.1M. All from Instagram.",
+        hookType:"Stat-Shock Open", hookLine:'"Allison closed $3.1M in one month. Three deals. All from Instagram. After one sentence change."',
+        source:"Style Spec §8.1 (Allison, Boca) · Soundbite Library §11",
+        bestFor:"Reel, 30–45s. The 'tiniest tweak' framing Amber already uses." }
+    ]
+  },
+  {
+    id: 4, day: "Thursday", dayShort: "THU", date: "May 1",
+    format: "Reach / Trend / Meme", pillar: "High shareability — broad appeal",
+    ideas: [
+      { letter:"A", title:'"What Would Million Dollar You Do?" — Future-Self Reach Reel',
+        angle:"A decision filter for anyone who has ever avoided the uncomfortable thing. Specific enough to be unmistakably Amber; broad enough to reach anyone building anything. No niche required to feel this.",
+        hookType:"First-Person Confession", hookLine:'"I started calling myself Million Dollar Amber. I\'m not exaggerating when I tell you it changed everything."',
+        source:"Soundbite Library §5 · Hook Library §2",
+        bestFor:"Talking head, 30–45s. High reach ceiling. (Don't also use for Tuesday.)" },
+      { letter:"B", title:'"If Other Jobs Were Treated Like a Real Estate Agent\'s" — Meme Carousel',
+        angle:"The industry expects agents to be available 24/7, justify their fee at every appointment, and respond to 11PM texts from clients not even under contract. Comedy carousel applying those expectations to other professions. Agents tag agents. Non-agents recognize the dynamic.",
+        hookType:"Pattern-Interrupt / Humor", hookLine:'"If other jobs were treated like a real estate agent\'s..."',
+        source:"Soundbite Library §2 (ER doctors, irrational expectations) · §13 (financial advisor/lawyer/CPA framing) · Hook Library §5",
+        bestFor:"Carousel, meme format. Rare use — high shareability when it lands." },
+      { letter:"C", title:'"Information Didn\'t Change Your Instagram" — Cohort Positioning',
+        angle:"The reason the free training didn't work wasn't because the information was wrong. It's because information alone doesn't move you. What moves you is a room watching, accountability, real-time feedback. Anyone who's bought a course and not finished it relates.",
+        hookType:"Contrarian Reframe", hookLine:'"The reason your free training didn\'t change your Instagram isn\'t because the information was wrong. It\'s because information doesn\'t move you."',
+        source:"Content Strategy (Cohort positioning) · Soundbite Library §5 · Hook Library §8",
+        bestFor:"Talking head, 30s, no slides. CTA: Comment COHORT." }
+    ]
+  },
+  {
+    id: 5, day: "Saturday", dayShort: "SAT", date: "May 3",
+    format: "Aspirational Reel or Carousel", pillar: "Identity, belief shift, luxury world",
+    ideas: [
+      { letter:"A", title:'"You Are Allowed to Build Your Business Around Your Life"',
+        angle:"The 2026 thesis as a direct permission slip. Amber's story — choosing to be a stay-at-home mom for five years, then building a 7-figure business on her own terms — is the proof it's possible. Gives agents explicit permission to design the business that serves their life.",
+        hookType:"Permission / Worthiness", hookLine:'"You are allowed to build your business around your life." (verbatim — Hook Library §9)',
+        source:"Hook Library §9 (verbatim) · Soundbite Library §1 · Content Strategy (2026 life-first)",
+        bestFor:"Aspirational reel, Tier 1 or 2 setting. Setting is the identity signal; spoken track is the permission." },
+      { letter:"B", title:'"Here\'s What $67/Month Actually Buys You" — Conversion Carousel',
+        angle:"Direct, price-transparent membership pitch. Slide 1: strong conviction about what the Toolkit produces, not just teaches. Middle slides: specific documented member results. Final slide: qualifier CTA. Saturday browsing intent makes this the right day to convert.",
+        hookType:"Stat-Shock", hookLine:'"Inside my membership, clients are using Instagram to secure listings from $1.5M all the way up to $32.5M." (verbatim — Hook Library §3)',
+        source:"Hook Library §3 (verbatim) · Style Spec §8.1 (Adrienne, Allison, Gabrielle) · Content Strategy Pillar 5",
+        bestFor:"Carousel, 6–8 slides. Final slide qualifier CTA: 'Comment ELEVATE even if you've been invisible for a year.'" },
+      { letter:"C", title:"The Renovation or Luxury Listing POV Moment",
+        angle:"Not the tour — one moment with a strong POV. One design decision, one room detail, with a caption that reveals how Amber thinks. Beautiful image from her actual world + a line or two about how she sees it.",
+        hookType:"Vivid Stakes Story", hookLine:'"Everyone said to go with [X]. We went with [Y] instead." (Amber supplies the specific decision)',
+        source:"Content Strategy (World-Building) · Soundbite Library §9",
+        bestFor:"Single image or short B-roll from renovation or a luxury listing. Amber supplies the specific moment." }
+    ]
+  },
+  {
+    id: 6, day: "Sunday", dayShort: "SUN", date: "May 4",
+    format: "B-Roll Lifestyle Reel", pillar: "World/Perspective — always B-roll",
+    ideas: [
+      { letter:"A", title:'"That Restaurant Your Ideal Client Goes to on Saturday Night? Know Its Name."',
+        angle:"Becoming a scholar of your market means knowing the lifestyle your ideal clients live, not just the inventory. B-roll of an elevated local setting with overlays teaching the principle.",
+        hookType:"Pattern 2 — Reframe (Beat 1 as question)", hookLine:"Beat 1: 'That restaurant your ideal client goes to on a Saturday night?' → Beat 2: 'You should know its name. You should have been there. This is market research.'",
+        source:"Soundbite Library §8 ('Become a scholar of the lifestyle side' · 'this is market research') · Feedback Log Apr 23",
+        bestFor:"B-roll, 15–25s. Film at elevated local restaurant, waterfront, or lifestyle setting." },
+      { letter:"B", title:'"What Does Your Ideal Client\'s Perfect Saturday Look Like?"',
+        angle:"The story of the agent whose ideal client wanted to go to the marina and have a glass of wine — and how that insight changed everything she filmed. B-roll that shows the aspirational life and teaches agents to mirror their ideal client's Saturday.",
+        hookType:"Beat 1 Question — Client Mirror", hookLine:'"What does your ideal client\'s perfect Saturday actually look like?" [Footage: marina, elevated restaurant, waterfront]',
+        source:"Soundbite Library §4 ('I asked her, what\'s their perfect Saturday? She said, marina, glass of wine...') · §8 (Gabrielle's date night restaurant content)",
+        bestFor:"B-roll, 15–20s. Film at a beautiful lifestyle location." },
+      { letter:"C", title:'"They\'re Not Buying the Countertop" — Luxury Listing B-roll',
+        angle:"When Amber walks through a listing, she's thinking about the life the buyer will live there — not specs. Slow B-roll inside a luxury listing with overlays teaching: agents who describe homes get listings. Agents who describe the life get luxury listings.",
+        hookType:"Callout / Identity Statement", hookLine:'"Real estate agents describe homes. The ones who get luxury listings? They describe the life."',
+        source:"Soundbite Library §7 · §9 (aspirational content) · Content Strategy Tier 1 settings",
+        bestFor:"B-roll, 15–25s. Requires access to a luxury listing — footage quality earns the positioning." }
+    ]
+  }
+];
+
+// ─── STATE (localStorage persists across sessions) ─────
+const STORAGE_KEY = `atk-idea-bank-${WEEK}`;
+let state = {};
+try { state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch(e) { state = {}; }
+// state[slotId][letter] = 'pick' | 'save' | 'reject' | null
+// state.picks = { slotId: letter } — current week selections
+
+function saveState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
+}
+
+function getIdeaState(slotId, letter) {
+  return (state[slotId] && state[slotId][letter]) || null;
+}
+function setIdeaState(slotId, letter, val) {
+  if (!state[slotId]) state[slotId] = {};
+  // If picking, unset any other 'pick' in this slot
+  if (val === 'pick') {
+    SLOTS.find(s=>s.id===slotId).ideas.forEach(i => {
+      if (state[slotId][i.letter] === 'pick') state[slotId][i.letter] = null;
+    });
+  }
+  state[slotId][letter] = state[slotId][letter] === val ? null : val;
+  saveState();
+}
+function getPickedLetter(slotId) {
+  const slotState = state[slotId] || {};
+  return Object.keys(slotState).find(l => slotState[l] === 'pick') || null;
+}
+function getSavedIdeas() {
+  const saved = [];
+  SLOTS.forEach(slot => {
+    slot.ideas.forEach(idea => {
+      if (getIdeaState(slot.id, idea.letter) === 'save') {
+        saved.push({ slot, idea });
+      }
+    });
+  });
+  return saved;
+}
+function countPicked() {
+  return SLOTS.filter(s => getPickedLetter(s.id)).length;
+}
+
+// ─── RENDER THIS WEEK ──────────────────────────────────
+function renderThisWeek() {
+  const grid = document.getElementById('slotsGrid');
+  grid.innerHTML = '';
+  SLOTS.forEach(slot => {
+    const pickedLetter = getPickedLetter(slot.id);
+    const card = document.createElement('div');
+    card.className = 'slot-card' + (pickedLetter ? ' has-pick' : '');
+    card.id = `slot-${slot.id}`;
+    card.innerHTML = `
+      <div class="slot-header">
+        <div class="day-block">
+          <span class="day-short">${slot.dayShort}</span>
+          <span class="day-date">${slot.date}</span>
+        </div>
+        <div class="slot-meta">
+          <div class="slot-format">${slot.format}</div>
+          <div class="slot-pillar">${slot.pillar}</div>
+        </div>
+        <span class="slot-pick-badge">Idea ${pickedLetter || ''}</span>
+      </div>
+      <div class="ideas-list">
+        ${slot.ideas.map(idea => {
+          const ist = getIdeaState(slot.id, idea.letter);
+          return renderIdeaRow(slot.id, idea, ist);
+        }).join('')}
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+  attachIdeaEvents();
+  updateBar();
+  renderSaved();
+  updateCounts();
+}
+
+function renderIdeaRow(slotId, idea, ist) {
+  const stateClass = ist ? `state-${ist}` : '';
+  const icon = ist === 'pick' ? '✓' : ist === 'save' ? '🔖' : ist === 'reject' ? '✕' : '';
+  return `
+    <div class="idea-row ${stateClass}" id="ir-${slotId}-${idea.letter}">
+      <div class="idea-title-bar" data-slot="${slotId}" data-letter="${idea.letter}">
+        <span class="idea-badge">${idea.letter}</span>
+        <span class="idea-name">${idea.title}</span>
+        ${icon ? `<span class="idea-status-icon">${icon}</span>` : ''}
+        <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="idea-detail">
+        <div class="detail-section">
+          <div class="detail-label">Angle</div>
+          <div class="detail-body">${idea.angle}</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Hook Type</div>
+          <span class="detail-tag">${idea.hookType}</span>
+          <div class="detail-quote">${idea.hookLine}</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Source</div>
+          <div class="detail-body">${idea.source}</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Best For</div>
+          <div class="detail-body">${idea.bestFor}</div>
+        </div>
+        <div class="action-buttons">
+          <button class="action-btn pick-btn ${ist==='pick'?'active':''}" data-slot="${slotId}" data-letter="${idea.letter}" data-action="pick">
+            ${ist==='pick' ? '✓ Picked' : 'Pick this week'}
+          </button>
+          <button class="action-btn save-btn ${ist==='save'?'active':''}" data-slot="${slotId}" data-letter="${idea.letter}" data-action="save">
+            ${ist==='save' ? '🔖 Saved' : 'Save for later'}
+          </button>
+          <button class="action-btn reject-btn ${ist==='reject'?'active':''}" data-slot="${slotId}" data-letter="${idea.letter}" data-action="reject">
+            ${ist==='reject' ? 'Rejected' : 'Reject'}
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function attachIdeaEvents() {
+  document.querySelectorAll('.idea-title-bar').forEach(bar => {
+    bar.addEventListener('click', () => {
+      const { slot, letter } = bar.dataset;
+      const row = document.getElementById(`ir-${slot}-${letter}`);
+      const wasOpen = row.classList.contains('open');
+      document.querySelectorAll(`#slot-${slot} .idea-row`).forEach(r => r.classList.remove('open'));
+      if (!wasOpen) row.classList.add('open');
+    });
+  });
+
+  document.querySelectorAll('.action-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const slotId = parseInt(btn.dataset.slot);
+      const letter = btn.dataset.letter;
+      const action = btn.dataset.action;
+      setIdeaState(slotId, letter, action);
+      renderThisWeek();
+      // Re-open
+      const row = document.getElementById(`ir-${slotId}-${letter}`);
+      if (row) row.classList.add('open');
+    });
+  });
+}
+
+// ─── SAVED TAB ─────────────────────────────────────────
+function renderSaved() {
+  const saved = getSavedIdeas();
+  const grid = document.getElementById('savedGrid');
+  if (saved.length === 0) {
+    grid.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🔖</div><div class="empty-state-text">No ideas saved yet.<br>Use "Save for later" on any idea to build your library.</div></div>`;
+    return;
+  }
+  grid.innerHTML = saved.map(({ slot, idea }) => `
+    <div class="saved-card">
+      <div class="saved-card-slot">${slot.day} · ${slot.format}</div>
+      <div class="saved-card-title">${idea.title}</div>
+      <div class="saved-card-angle">${idea.angle.substring(0, 120)}…</div>
+      <div class="saved-card-actions">
+        <button class="mini-btn pick" data-slot="${slot.id}" data-letter="${idea.letter}" data-action="pick">Use this week</button>
+        <button class="mini-btn remove" data-slot="${slot.id}" data-letter="${idea.letter}" data-action="remove">Remove</button>
+      </div>
+    </div>
+  `).join('');
+
+  grid.querySelectorAll('.mini-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const slotId = parseInt(btn.dataset.slot);
+      const letter = btn.dataset.letter;
+      const action = btn.dataset.action;
+      if (action === 'remove') {
+        if (!state[slotId]) state[slotId] = {};
+        state[slotId][letter] = null;
+        saveState();
+      } else if (action === 'pick') {
+        setIdeaState(slotId, letter, 'pick');
+      }
+      renderThisWeek();
+    });
+  });
+}
+
+// ─── BAR + COUNTS ──────────────────────────────────────
+function updateBar() {
+  const total = countPicked();
+  const pill = document.getElementById('picksPill');
+  pill.textContent = `${total} of 6 picked`;
+  pill.className = 'picks-pill' + (total === 6 ? ' complete' : '');
+
+  const chips = document.getElementById('bottomChips');
+  chips.innerHTML = SLOTS.map(slot => {
+    const p = getPickedLetter(slot.id);
+    return `<span class="chip${p?' filled':''}">${slot.dayShort}: ${p ? 'Idea '+p : '—'}</span>`;
+  }).join('');
+
+  const btn = document.getElementById('generateBtn');
+  if (total === 6) {
+    btn.classList.add('ready');
+    btn.textContent = 'Review My Picks →';
+  } else {
+    btn.classList.remove('ready');
+    btn.textContent = `${6 - total} more to pick →`;
+  }
+}
+
+function updateCounts() {
+  const total = countPicked();
+  document.getElementById('count-week').textContent = `${total}/6`;
+  document.getElementById('count-saved').textContent = getSavedIdeas().length;
+}
+
+// ─── TABS ──────────────────────────────────────────────
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(`panel-${btn.dataset.tab}`).classList.add('active');
+  });
+});
+
+// ─── MODAL ─────────────────────────────────────────────
+document.getElementById('generateBtn').addEventListener('click', () => {
+  if (countPicked() < 6) return;
+  const list = document.getElementById('selectionsList');
+  const lines = [];
+  list.innerHTML = SLOTS.map(slot => {
+    const letter = getPickedLetter(slot.id);
+    const idea = slot.ideas.find(i => i.letter === letter);
+    lines.push(`${slot.day} (${slot.format}): ${idea.title}`);
+    return `<div class="selection-item">
+      <div class="selection-day">${slot.dayShort} · ${slot.date}</div>
+      <div class="selection-title">${idea.title}</div>
+      <div class="selection-meta">${slot.format} · Idea ${letter}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('copyText').textContent =
+    `Here are my picks for this week's content:\n\n${lines.join('\n')}\n\nPlease generate all 6 pieces now.`;
+  document.getElementById('overlay').classList.add('open');
+});
+
+document.getElementById('closeModal').addEventListener('click', () =>
+  document.getElementById('overlay').classList.remove('open'));
+document.getElementById('overlay').addEventListener('click', e => {
+  if (e.target === e.currentTarget) e.currentTarget.classList.remove('open');
+});
+
+document.getElementById('copyBtn').addEventListener('click', () => {
+  navigator.clipboard.writeText(document.getElementById('copyText').textContent).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy to Clipboard'; btn.classList.remove('copied'); }, 2000);
+  });
+});
+
+// ─── INIT ──────────────────────────────────────────────
+renderThisWeek();
+</script>
+
+</div><!-- /app -->
+
+<script>
+// ─── AUTH ─────────────────────────────────────────────
+const PASS = 'ATK123!';
+const AUTH_KEY = 'atk-auth';
+const gate = document.getElementById('gate');
+const app = document.getElementById('app');
+const input = document.getElementById('gateInput');
+const errEl = document.getElementById('gateError');
+const btn = document.getElementById('gateBtn');
+const toggle = document.getElementById('gateToggle');
+
+function unlock() {
+  gate.classList.remove('visible');
+  app.classList.remove('hidden');
+}
+
+function tryUnlock() {
+  if (input.value === PASS) {
+    localStorage.setItem(AUTH_KEY, '1');
+    unlock();
+  } else {
+    input.classList.add('error');
+    errEl.textContent = 'Incorrect password. Try again.';
+    input.value = '';
+    input.focus();
+    setTimeout(() => { input.classList.remove('error'); errEl.textContent = ''; }, 2500);
+  }
+}
+
+// Check if already authenticated
+if (localStorage.getItem(AUTH_KEY) === '1') {
+  unlock();
+} else {
+  gate.classList.add('visible');
+  setTimeout(() => input.focus(), 100);
+}
+
+btn.addEventListener('click', tryUnlock);
+input.addEventListener('keydown', e => { if (e.key === 'Enter') tryUnlock(); });
+toggle.addEventListener('click', () => {
+  input.type = input.type === 'password' ? 'text' : 'password';
+  toggle.textContent = input.type === 'password' ? '👁' : '🙈';
+});
+</script>
+</body>
+</html>
