@@ -35,7 +35,7 @@
       "initial": "T",
       "tier": 2,
       "reportsTo": "amber",
-      "aiEmployees": ["social-media-data-analyst", "hooks-specialist"]
+      "aiEmployees": ["social-media-data-analyst", "hooks-specialist", "reel-structure-specialist", "transcript-specialist"]
     },
     {
       "id": "hannah",
@@ -79,6 +79,22 @@
       "tag": "SCHEDULED",
       "status": "BUILDING",
       "schedule": "Daily 6:30 AM"
+    },
+    "reel-structure-specialist": {
+      "name": "Reel Structure Specialist",
+      "role": "Body-Beat Pattern Intelligence",
+      "description": "Sibling to Hooks Specialist for what happens AFTER the hook. Scans new reel analyses, briefs, and transcripts for tension beats, resolution mechanics, pacing data, on-screen text patterns, CTA structures, and transition phrases. Appends to the Reel Structure Library. Runs scheduled after the Hooks Specialist, or on demand.",
+      "tag": "SCHEDULED",
+      "status": "BUILDING",
+      "schedule": "Daily 6:35 AM"
+    },
+    "transcript-specialist": {
+      "name": "Transcript Specialist",
+      "role": "Amber Voice Mining",
+      "description": "Mines verbatim Amber soundbites from her transcripts (Cohort calls, bootcamps, Collective, business planning). Tags by topic and intent (hook material, tension framing, resolution principle, full POV, story arc, signature phrase, contrarian take). Appends to the Soundbite Library, which all current and future copywriters (Reel, Carousel, B-roll, Email) read as a shared grounding source.",
+      "tag": "SCHEDULED",
+      "status": "BUILDING",
+      "schedule": "Daily 6:40 AM"
     },
     "reel-script-copywriter": {
       "name": "Reel Script Copywriter",
