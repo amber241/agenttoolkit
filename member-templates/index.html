@@ -262,12 +262,12 @@ function parseTemplate(raw) {
     t.contentType = parts[1] || '';
   }
 
-  // NOTE: content may start on same line
-  const noteM = raw.match(/^NOTE:\s*([\s\S]*?)(?=\n\n(?:HOOK|SLIDE)|$)/im);
+  // NOTE: content may start on same line — stop at blank line before next section
+  const noteM = raw.match(/^NOTE:\s*([\s\S]*?)(?=\n\n)/im);
   t.note = noteM ? noteM[1].trim() : '';
 
-  // HOOK MODIFICATIONS (multiple, - or * bullets)
-  const hookModM = raw.match(/^HOOK MODIFICATIONS[^:]*:[\s\S]*?\n([\s\S]*?)(?=\n\n(?:SLIDE|CAPTION)|$)/im);
+  // HOOK MODIFICATIONS (multiple, - or * bullets) — capture all bullet lines
+  const hookModM = raw.match(/^HOOK MODIFICATIONS[^:]*:\s*\n((?:[-*][^\n]*\n?)*)/im);
   if (hookModM) {
     hookModM[1].split('\n').forEach(line => {
       let m = line.match(/^[-*]\s+\*\*(.+?)\*\*/);
@@ -297,7 +297,7 @@ function parseTemplate(raw) {
   t.recommendedHook = rec ? rec.text : '';
 
   // SLIDE RECOMMENDATIONS or CAROUSEL SLIDES
-  const slidesSec = raw.match(/^(?:SLIDE RECOMMENDATIONS|CAROUSEL SLIDES):\s*\n([\s\S]*?)(?=\n\nCAPTION:|$)/im);
+  const slidesSec = raw.match(/^(?:SLIDE RECOMMENDATIONS|CAROUSEL SLIDES):\s*\n([\s\S]*?)(?=\n\nCAPTION:)/im);
   if (slidesSec) {
     slidesSec[1].split(/(?=^Slide\s+\d+)/im).filter(s=>s.trim()).forEach(part => {
       const labelM = part.match(/^(Slide\s+\d+[^\n]*)/i);
@@ -308,7 +308,7 @@ function parseTemplate(raw) {
   }
 
   // CAPTION
-  const capM = raw.match(/^CAPTION:\s*([\s\S]*)$/im);
+  const capM = raw.match(/^CAPTION:\s*([\s\S]*)/im);
   if (capM) t.captionShort = capM[1].trim();
 
   return t;
