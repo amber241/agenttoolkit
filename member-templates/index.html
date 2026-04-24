@@ -170,6 +170,14 @@
 
   /* NOTION BUTTON */
   .tc-footer { padding: 12px 20px; background: var(--cream); display: flex; justify-content: flex-end; }
+  .copy-cap-btn {
+    margin-top: 8px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600;
+    padding: 6px 14px; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--cream); color: var(--brown-light); cursor: pointer; letter-spacing: .02em;
+    transition: all .15s;
+  }
+  .copy-cap-btn:hover { border-color: var(--brown); color: var(--brown); }
+  .copy-cap-btn.copied { background: var(--sage); color: #fff; border-color: var(--sage); }
   .notion-btn {
     font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600;
     padding: 7px 16px; border-radius: 8px; border: 1px solid var(--border);
@@ -455,6 +463,7 @@ function renderTemplates() {
           ${capTabsHtml}
           <textarea class="cap-textarea" id="cap-${idx}"
             oninput="saveEdit(${idx},'capText',this.value)">${capDisplay}</textarea>
+          <button class="copy-cap-btn" id="copy-btn-${idx}" onclick="copyCap(${idx})">Copy caption</button>
         </div>
       </div>
 
@@ -479,6 +488,16 @@ function switchCap(idx, type, btn) {
   if (!current) {
     document.getElementById('cap-'+idx).value = type==='seo' ? t.captionSeo : t.captionShort;
   }
+}
+
+function copyCap(idx) {
+  const text = document.getElementById('cap-'+idx).value;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copy-btn-'+idx);
+    btn.textContent = 'Copied ✓';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy caption'; btn.classList.remove('copied'); }, 2000);
+  });
 }
 
 function sendToNotion(idx) {
