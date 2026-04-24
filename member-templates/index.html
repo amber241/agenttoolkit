@@ -166,6 +166,7 @@
     background: var(--cream); resize: vertical; outline: none; line-height: 1.65;
   }
   .cap-textarea:focus { border-color: var(--brown); }
+  .hook-textarea { min-height: 120px; }
   .bracket { background: #fff3cd; border-radius: 3px; padding: 0 2px; }
 
   /* NOTION BUTTON */
@@ -379,29 +380,16 @@ function renderTemplates() {
     const defaultCap = savedCapT === 'seo' ? t.captionSeo : t.captionShort;
     const capDisplay = savedCapTx || defaultCap;
 
-    // Hook options HTML
+    // Hook options HTML — plain textarea, one bullet per line, ★ marks recommended
+    const hookText = t.hooks.length
+      ? t.hooks.map(h => (h.rec ? '★ ' : '• ') + h.text).join('\n')
+      : '';
+    const savedHookText = getEdit(idx, 'hookText', hookText);
     const hookOptionsHtml = t.hooks.length ? `
-      <ul class="hook-list">
-        ${t.hooks.map((h, hi) => {
-          const uid = `hook-${idx}-${hi}`;
-          const isRec = h.rec;
-          const checked = savedHook ? (savedHook === h.text ? 'checked' : '') : (isRec ? 'checked' : (hi === 0 ? 'checked' : ''));
-          return `<li class="hook-item${isRec?' recommended':''}">
-            <label>
-              <input type="radio" name="hook-${idx}" value="${h.text.replace(/"/g,'&quot;')}" ${checked}
-                onchange="saveEdit(${idx},'hook',this.value)">
-              ${highlightBrackets(h.text)}
-              ${isRec ? '<span class="hook-rec-badge">Recommended</span>' : ''}
-            </label>
-          </li>`;
-        }).join('')}
-      </ul>
-      <div class="hook-custom-wrap">
-        <label>Write your own</label>
-        <input class="hook-custom-input" type="text" placeholder="Type a custom hook…"
-          value="${(!t.hooks.find(h=>h.text===savedHook)&&savedHook)?savedHook.replace(/"/g,'&quot;'):''}"
-          oninput="saveEdit(${idx},'hook',this.value)">
-      </div>` : '<p style="font-size:13px;color:var(--brown-light)">No hook variations provided.</p>';
+      <textarea class="cap-textarea hook-textarea" id="hook-field-${idx}"
+        oninput="saveEdit(${idx},'hookText',this.value)">${savedHookText.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</textarea>
+      <button class="copy-cap-btn" id="copy-hook-btn-${idx}" onclick="copyHook(${idx})">Copy hooks</button>`
+      : '<p style="font-size:13px;color:var(--brown-light)">No hook variations provided.</p>';
 
     // Slides HTML
     const slidesHtml = t.slides.length ? `
@@ -498,6 +486,16 @@ function copyCap(idx) {
     btn.textContent = 'Copied ✓';
     btn.classList.add('copied');
     setTimeout(() => { btn.textContent = 'Copy caption'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+function copyHook(idx) {
+  const text = document.getElementById('hook-field-'+idx).value;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copy-hook-btn-'+idx);
+    btn.textContent = 'Copied ✓';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy hooks'; btn.classList.remove('copied'); }, 2000);
   });
 }
 
