@@ -16,7 +16,11 @@
         "daily-competitor-brief-writer",
         "weekly-competitor-brief-writer",
         "reel-script-copywriter",
-        "carousel-post-copywriter"
+        "carousel-post-copywriter",
+        "broll-reel-copywriter",
+        "newsletter-copywriter",
+        "sales-page-copywriter",
+        "weekly-member-templates"
       ]
     },
     {
@@ -35,7 +39,7 @@
       "initial": "T",
       "tier": 2,
       "reportsTo": "amber",
-      "aiEmployees": ["social-media-data-analyst", "hooks-specialist", "reel-structure-specialist", "transcript-specialist"]
+      "aiEmployees": ["social-media-data-analyst", "hooks-specialist", "reel-structure-specialist", "transcript-specialist", "caption-analyzer"]
     },
     {
       "id": "hannah",
@@ -51,10 +55,10 @@
     "social-media-data-analyst": {
       "name": "Social Media Data Analyst",
       "role": "IG Analyzer",
-      "description": "Scrapes competitor and inspiration posts nightly. Transcribes audio with Whisper. OCRs on-screen text. Writes structured per-post reports. On-demand mode (paste URLs in Cowork) in build.",
+      "description": "Scrapes competitor and inspiration posts nightly. Transcribes audio with Whisper. OCRs on-screen text. Writes structured per-post reports. On-demand mode also available — paste reel URLs in Cowork to analyze instantly.",
       "tag": "SCHEDULED",
       "status": "LIVE",
-      "schedule": "Daily 6:00 AM"
+      "schedule": "Daily 6:00 AM + on-demand"
     },
     "daily-competitor-brief-writer": {
       "name": "Daily Competitor Brief Writer",
@@ -77,7 +81,7 @@
       "role": "Hook Intelligence",
       "description": "Scans new reel analyses, competitor briefs, and transcripts. Extracts high-performing hooks. Tags each by pattern, source, date, and why it works. Appends to the Hook Library and deduplicates. Runs scheduled after the Social Media Data Analyst, or on demand.",
       "tag": "SCHEDULED",
-      "status": "BUILDING",
+      "status": "LIVE",
       "schedule": "Daily 6:30 AM"
     },
     "reel-structure-specialist": {
@@ -85,32 +89,72 @@
       "role": "Body-Beat Pattern Intelligence",
       "description": "Sibling to Hooks Specialist for what happens AFTER the hook. Scans new reel analyses, briefs, and transcripts for tension beats, resolution mechanics, pacing data, on-screen text patterns, CTA structures, and transition phrases. Appends to the Reel Structure Library. Runs scheduled after the Hooks Specialist, or on demand.",
       "tag": "SCHEDULED",
-      "status": "BUILDING",
+      "status": "LIVE",
       "schedule": "Daily 6:35 AM"
     },
     "transcript-specialist": {
       "name": "Transcript Specialist",
       "role": "Amber Voice Mining",
-      "description": "Mines verbatim Amber soundbites from her transcripts (Cohort calls, bootcamps, Collective, business planning). Tags by topic and intent (hook material, tension framing, resolution principle, full POV, story arc, signature phrase, contrarian take). Appends to the Soundbite Library, which all current and future copywriters (Reel, Carousel, B-roll, Email) read as a shared grounding source.",
+      "description": "Mines verbatim Amber soundbites from her transcripts (Cohort calls, bootcamps, Collective, business planning). Tags by topic and intent (hook material, tension framing, resolution principle, full POV, story arc, signature phrase, contrarian take). Appends to the Soundbite Library, which all copywriters (Reel, Carousel, B-roll, Email) read as a shared grounding source.",
       "tag": "SCHEDULED",
-      "status": "BUILDING",
+      "status": "LIVE",
       "schedule": "Daily 6:40 AM"
+    },
+    "caption-analyzer": {
+      "name": "Caption Analyzer",
+      "role": "Caption Pattern Intelligence",
+      "description": "Fourth mining sibling in the content-intelligence layer. Mines caption patterns from reel analyses and competitor briefs across six dimensions: first-line preview mechanics, structural patterns (listicle / story / POV / tutorial / confession), CTA placement + qualifier lines, length + density, SEO keyword weaving, formatting + visual mechanics. Appends to the Caption Library — read by all three copywriter skills (Reel, Carousel, B-Roll) plus the Newsletter Copywriter.",
+      "tag": "SCHEDULED",
+      "status": "LIVE",
+      "schedule": "Daily 6:45 AM"
     },
     "reel-script-copywriter": {
       "name": "Reel Script Copywriter",
       "role": "Reel Script Generation",
-      "description": "Generates reel scripts in Amber's voice. Multiple hook options pulled from the Hook Library. Beat-by-beat structure, thumbnail text, short and SEO captions. Enforces 5th-grade reading level and contrarian POV per the Style Spec. Two modes: on-demand single reel, or weekly batch from the Weekly Brief.",
+      "description": "Generates reel scripts in Amber's voice. Loads 7 grounding files (Hook Library, Reel Structure Library, Soundbite Library, Caption Library, Style Spec, Voice Guide, Brand Style Guide). Body-first workflow (tension → resolution → CTA → distill hooks from body). Enforces 5th-grade reading level, clarity over cleverness, contrarian POV, audience-naming in hook. Two modes: on-demand single reel, or weekly batch from the Weekly Brief.",
       "tag": "ON_DEMAND",
-      "status": "BUILDING",
+      "status": "LIVE",
       "schedule": "On demand"
     },
     "carousel-post-copywriter": {
       "name": "Carousel Post Copywriter",
       "role": "Carousel Copy Generation",
-      "description": "Generates carousel slide copy and captions from the Framework Library plus voice guide. Tuned for save-rate and share behavior, not surface likes.",
+      "description": "Generates Instagram carousel posts (5-10 slides). Same 7 grounding files and body-first workflow as Reel Script Copywriter, format-adapted. Slide 1 = hook (audience-named, validated against Hook Library). Body slides = one idea per slide, phone-readable. Final slide = CTA, visually distinct. Tuned for save-rate and share behavior. Captions summarize the thesis rather than re-argue it.",
       "tag": "ON_DEMAND",
-      "status": "PLANNED",
+      "status": "LIVE",
       "schedule": "On demand"
+    },
+    "broll-reel-copywriter": {
+      "name": "B-Roll Reel Copywriter",
+      "role": "B-Roll Reel Generation",
+      "description": "Generates B-roll reels (15-25 seconds, no spoken script). Output is a text overlay sequence (2-5 overlays, 3-8 words each) plus a footage cue list plus the caption — which carries the full message and CTA since there's no voice. Overlay 1 = hook. CTA lives in caption only. Loads the same 7 grounding files, with heavy reliance on Reel Structure Library Section D (on-screen text patterns) and Caption Library.",
+      "tag": "ON_DEMAND",
+      "status": "LIVE",
+      "schedule": "On demand"
+    },
+    "newsletter-copywriter": {
+      "name": "Newsletter Copywriter",
+      "role": "Email Copy Generation",
+      "description": "Writes email newsletters and launch sequences for The Agent Toolkit in Amber's voice. Reads the Voice Guide, Brand Style Guide, and Soundbite Library before every email. Two modes: single email (daily nurture, teaching moment, launch announcement) or full launch sequence (open-to-close campaign for cohort or membership). Applies Amber's email voice — direct, teaching-forward, no fluff.",
+      "tag": "ON_DEMAND",
+      "status": "LIVE",
+      "schedule": "On demand"
+    },
+    "sales-page-copywriter": {
+      "name": "Sales Page Copywriter",
+      "role": "Sales Page Copy Generation",
+      "description": "Writes full-length, conversion-optimized sales pages, landing pages, and registration pages in Amber's voice. Studies four competitor pages (Callan Faulkner, Ashley Brock, and others) for proven conversion patterns before writing. Two modes: full page or single section. Covers bootcamp pages, cohort pages, membership pages, waitlist pages, and challenge pages.",
+      "tag": "ON_DEMAND",
+      "status": "LIVE",
+      "schedule": "On demand"
+    },
+    "weekly-member-templates": {
+      "name": "Weekly Member Templates Generator",
+      "role": "Membership Content Production",
+      "description": "Pulls the week's content ideas from the Notion Membership Content Calendar and generates the 7-day batch of Instagram caption templates for Agent Toolkit members. Produces one template at a time for Amber's approval, then compiles into a single dated markdown file. Templates follow ATK format and voice so members can personalize and post directly.",
+      "tag": "ON_DEMAND",
+      "status": "LIVE",
+      "schedule": "Weekly"
     }
   }
 }
